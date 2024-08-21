@@ -22,12 +22,14 @@
             display: flex;
             justify-content: center;
             background-color: #333;
+            flex-wrap: wrap;
         }
         nav a {
             color: white;
             padding: 14px 20px;
             text-decoration: none;
             text-align: center;
+            flex: 1 1 auto;
         }
         nav a:hover {
             background-color: #ddd;
@@ -48,11 +50,22 @@
             bottom: 0;
             width: 100%;
         }
+
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+            nav a {
+                padding: 10px;
+                font-size: 14px;
+            }
+            header, .content {
+                padding: 10px;
+            }
+        }
     </style>
 </head>
 <body>
     <header>
-        <h1>Student and Research Enthusiast person</h1>
+        <h1>Student and Research Enthusiast</h1>
         <p>Exploring the Wonders of Physics and Mathematics</p>
     </header>
     <nav>
@@ -89,3 +102,4 @@
     </footer>
 </body>
 </html>
+
