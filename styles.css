@@ -157,3 +157,92 @@ footer p {
 .login-container input[type="submit"]:hover {
     background-color: #00e6b8;
 }
+/* Contact Page Styles */
+.contact-details {
+    margin-bottom: 20px;
+}
+
+.contact-details h3 {
+    font-size: 1.5em;
+    color: #00ffcc;
+    margin-bottom: 10px;
+}
+
+.contact-details p, .social-media-links {
+    font-size: 1em;
+    color: #cccccc;
+    margin-bottom: 15px;
+}
+
+.contact-details a {
+    color: #00ffcc;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.contact-details a:hover {
+    color: #00e6b8;
+}
+
+.contact-form {
+    margin-bottom: 20px;
+}
+
+.contact-form h3 {
+    font-size: 1.5em;
+    color: #00ffcc;
+    margin-bottom: 15px;
+}
+
+.contact-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #99ffeb;
+}
+
+.contact-form input[type="text"],
+.contact-form input[type="email"],
+.contact-form textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #00ffcc;
+    border-radius: 4px;
+    background-color: #141414;
+    color: #ffffff;
+}
+
+.contact-form input[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    background-color: #00ffcc;
+    color: #0a0a0a;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    text-transform: uppercase;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.contact-form input[type="submit"]:hover {
+    background-color: #00e6b8;
+}
+
+.map {
+    margin-bottom: 20px;
+}
+
+.map h3 {
+    font-size: 1.5em;
+    color: #00ffcc;
+    margin-bottom: 15px;
+}
+
+.map iframe {
+    border: 2px solid #00ffcc;
+    border-radius: 4px;
+}
+
