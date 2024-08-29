@@ -3,31 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact - Student and Research Enthusiast</title>
+    <title>Contact Us - Student and Research Enthusiast</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-
 </head>
 <body>
     <header>
         <h1>Student and Research Enthusiast</h1>
         <p>Exploring the Wonders of Physics and Mathematics</p>
+        <button class="sidebar-toggle">☰</button>
     </header>
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="resources.html">Resources</a>
-        <a href="tutorials.html">Tutorials</a>
-        <a href="discussion.html">Discussion</a>
+    
+    <nav class="sidebar">
+        <a href="index.html#home">Home</a>
+        <a href="index.html#resources">Resources</a>
+        <a href="index.html#tutorials">Tutorials</a>
+        <a href="index.html#discussion">Discussion</a>
         <a href="contact.html">Contact</a>
-        <a href="login.html">Login</a>
-
     </nav>
+
     <div class="content">
-        <h2>Contact Us</h2>
-        <p>Have questions or suggestions? Reach out to us through our contact form.</p>
+        <div id="contact" class="section">
+            <h2>Contact Us</h2>
+            <p>We would love to hear from you! Whether you have questions, suggestions, or just want to say hello, feel free to reach out.</p>
+
+            <!-- Contact Details -->
+            <div class="contact-details">
+                <h3>Our Office</h3>
+                <p>123 Research Ave, Physics Town, Kathmandu, Nepal</p>
+
+                <h3>Email Us</h3>
+                <p><a href="mailto:info@researchenthusiast.com">info@researchenthusiast.com</a></p>
+
+                <h3>Call Us</h3>
+                <p>+977-1-1234567</p>
+
+                <h3>Follow Us</h3>
+                <div class="social-media-links">
+                    <a href="#" target="_blank">Facebook</a> |
+                    <a href="#" target="_blank">Twitter</a> |
+                    <a href="#" target="_blank">LinkedIn</a>
+                </div>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="contact-form">
+                <h3>Send Us a Message</h3>
+                <form action="submit_form.php" method="POST">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required>
+
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+
+                    <label for="message">Message:</label>
+                    <textarea id="message" name="message" rows="5" required></textarea>
+
+                    <input type="submit" value="Send Message">
+                </form>
+            </div>
+
+            <!-- Map -->
+            <div class="map">
+                <h3>Visit Us</h3>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3532.374511406206!2d85.31529221506058!3d27.70903158279166!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb191c2b8c3b83%3A0x4000a25e73991f0!2sKathmandu%2C%20Nepal!5e0!3m2!1sen!2snp!4v1665821422862!5m2!1sen!2snp" width="100%" height="300" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+            </div>
+        </div>
     </div>
+
     <footer>
         <p>&copy; 2024 Student and Research Enthusiast. All rights reserved.</p>
     </footer>
+
+    <script src="scripts.js"></script>
 </body>
 </html>
+
