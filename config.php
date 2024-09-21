@@ -1,9 +1,9 @@
 <?php
 // Database connection parameters
 $host = 'localhost';         // The server where your database is hosted
-$dbname = 'your_database';    // The name of your MySQL database
-$user = 'your_db_user';       // Your database username
-$pass = 'your_db_password';   // Your database password
+$dbname = 'login_info';    // The name of your MySQL database
+$user = 'root';       // Your database username
+$pass = '9744319864';   // Your database password
 
 try {
     // Create a new PDO instance to connect to the database
