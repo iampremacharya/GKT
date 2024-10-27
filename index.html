@@ -3,32 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - Student and Research Enthusiast</title>
+    <title>Elegant Floating Website</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <header>
-        <h1>Student and Research Enthusiast</h1>
-        <p>Exploring the Wonders of Physics and Mathematics</p>
-    </header>
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="resources.html">Resources</a>
-        <a href="tutorials.html">Tutorials</a>
-        <a href="discussion.html">Discussion</a>
-        <a href="contact.html">Contact</a>
-        <a href="login.html">Login</a>
+    <div class="floating-container">
+        <header>
+            <nav class="navbar">
+                <div class="brand-logo">Dreamers</div>
+                <ul class="nav-menu">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <div class="menu-toggle" id="mobile-menu">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </header>
 
-    </nav>
-    <div class="content">
-        <h2>Welcome to Our Platform</h2>
-        <p>This website is dedicated to students and research enthusiasts who have a passion for Physics and Mathematics.</p>
+        <section id="hero">
+            <h1>Welcome to Our Royal Experience</h1>
+            <p>Your journey to elegance starts here.</p>
+            <button class="cta">Get Started</button>
+        </section>
+
+        <section id="about">
+            <h2>About Us</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        </section>
+
+        <section id="services">
+            <h2>Our Services</h2>
+            <div class="service-cards">
+                <div class="service-card">
+                    <h3>Service 1</h3>
+                    <p>Details about service 1.</p>
+                </div>
+                <div class="service-card">
+                    <h3>Service 2</h3>
+                    <p>Details about service 2.</p>
+                </div>
+                <div class="service-card">
+                    <h3>Service 3</h3>
+                    <p>Details about service 3.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact">
+            <h2>Contact Us</h2>
+            <div class="contact-form-container">
+                <form id="contact-form">
+                    <input type="text" placeholder="Your Name" required>
+                    <input type="email" placeholder="Your Email" required>
+                    <textarea placeholder="Your Message" required></textarea>
+                    <button type="submit">Send Message</button>
+                </form>
+            </div>
+        </section>
+
+        <footer>
+            <p>&copy; 2024 Dreamers. All rights reserved.</p>
+        </footer>
     </div>
-    <footer>
-        <p>&copy; 2024 Student and Research Enthusiast. All rights reserved.</p>
-    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
 
