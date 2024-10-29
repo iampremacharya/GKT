@@ -17,8 +17,8 @@ body {
     background-color: #e0b0d1; /* Nude background for the container */
     border-radius: 25px; /* Rounded corners */
     padding: 20px;
-    max-width: 800px; /* Max width for the content */
-    margin: 80px auto; /* Centered margin with a lower position */
+    max-width: 98%; /* Max width for the content */
+    margin: 5px auto; /* Centered margin with a lower position */
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25); /* Floating effect */
 }
 
@@ -86,6 +86,33 @@ body {
     text-align: center;
     border-radius: 25px; /* Rounded corners */
 }
+.about-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 2em;
+    text-align: left;
+    background-color: #e0b0d1; /* Nude color background */
+    border-radius: 15px; /* Rounded corners */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); /* Floating shadow effect */
+}
+
+.profile-image {
+    width: 300px;
+    height: 300px;
+    border-radius: 30%; /* Circular image */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Subtle shadow for the image */
+}
+
+#about p {
+    font-size: 1.1em;
+    color: #4b3c2a; /* Dark brown for text */
+    max-width: 600px;
+    line-height: 1.6;
+    text-align: justify;
+}
+
 
 /* Services Section */
 #services {
