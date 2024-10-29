@@ -99,8 +99,8 @@ body {
 }
 
 .profile-image {
-    width: 300px;
-    height: 300px;
+    width: 100px;
+    height: 100px;
     border-radius: 30%; /* Circular image */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Subtle shadow for the image */
 }
