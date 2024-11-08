@@ -99,8 +99,8 @@ body {
 }
 
 .profile-image {
-    width: 100px;
-    height: 100px;
+    width: 300px;
+    height: 300px;
     border-radius: 30%; /* Circular image */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Subtle shadow for the image */
 }
@@ -205,4 +205,87 @@ footer {
     .service-cards {
         flex-direction: column;
     }
+}
+
+/* Achievements Section */
+#achievements {
+    padding: 3em 2em;
+    text-align: center;
+    background-color: #f9f9f9; /* Light background for contrast */
+    border-radius: 25px; /* Rounded corners */
+    margin: 20px 0; /* Space between sections */
+}
+
+.achievements-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Space between cards */
+    justify-content: center;
+}
+
+.achievement-card {
+    background-color: white; /* White background for cards */
+    border-radius: 15px; /* Rounded corners */
+    padding: 1em;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    text-align: center; /* Centered text */
+    width: 250px; /* Fixed width for cards */
+}
+
+.certificate-image {
+    width: 100%; /* Responsive image */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 10px; /* Slightly rounded corners */
+}
+
+.achievement-card p {
+    margin-top: 0.5em; /* Space above the title */
+    color: #4b3c2a; /* Dark brown for text */
+}
+
+
+/* Add this to your existing CSS */
+.nav-menu.active {
+    display: flex; /* Show the menu when active */
+    flex-direction: column; /* Stack items vertically */
+    position: absolute; /* Position it correctly on mobile */
+    top: 60px; /* Adjust according to your header height */
+    right: 0;
+    background-color: #d1b44c; /* Match navbar color */
+    width: 100%; /* Full width */
+    z-index: 100; /* Ensure it stays on top */
+}
+.nav-menu li a:hover {
+    color: #f1d6a7; /* Lighten text on hover */
+}
+
+.cta:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+}
+section {
+    margin: 20px 0; /* Add space between sections */
+}
+.nav-menu li a:focus,
+#contact-form button:focus {
+    outline: 2px solid #4b3c2a; /* Outline color for focus */
+}
+#contact-form button:disabled {
+    background-color: #ccc; /* Greyed out */
+    cursor: not-allowed; /* Change cursor */
+}
+:root {
+    --golden-luxe: #d1b44c;
+    --dark-brown: #4b3c2a;
+    --light-background: #f9f9f9;
+    --nude: #e0b0d1;
+    --light-gold: #f1d6a7;
+}
+
+body {
+    background-color: var(--light-background);
+}
+
+.navbar {
+    background-color: var(--golden-luxe);
+    color: var(--dark-brown);
 }
