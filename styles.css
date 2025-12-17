@@ -181,6 +181,28 @@ body {
 #contact-form button:hover {
     background-color: #b99c3a; /* Darker shade on hover */
 }
+.social-links {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.social-links a {
+    color: #333;
+    font-size: 28px;
+    margin: 0 15px;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.social-links a:hover {
+    color: #0077b5; /* LinkedIn blue */
+    transform: translateY(-5px);
+}
+
+/* Optional: Different colors per platform */
+.social-links a:nth-child(1):hover { color: #1877f2; } /* Facebook */
+.social-links a:nth-child(2):hover { color: #0077b5; } /* LinkedIn */
+.social-links a:nth-child(3):hover { color: #000; }    /* GitHub */
+
 
 /* Footer */
 footer {
