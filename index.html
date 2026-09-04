@@ -1,498 +1,1395 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GKT — The Future Is Engineered.</title>
 
-<title>GKT — The Future Is Engineered.</title>
+    <meta name="description" content="GKT is a growing vision at the intersection of knowledge, education, engineering, technology and industry.">
+    <meta name="keywords" content="GKT, technology, knowledge, education, engineering, industry, innovation, research">
+    <meta name="author" content="GKT">
 
-<meta name="description" content="GKT is a growing vision at the intersection of knowledge, education, engineering, technology and industry."> <meta name="keywords" content="GKT, technology, knowledge, education, engineering, industry, innovation, research"> <meta name="author" content="GKT">
+    <meta name="theme-color" content="#080808">
 
-<meta name="theme-color" content="#080808">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<link rel="preconnect" href="https://fonts.googleapis.com"> <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Three.js Library for 3D Rendering -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* =========================================================
+           GKT — GLOBAL
+           ========================================================= */
+        :root {
+            --bg: #080808;
+            --fg: #f2f0ea;
+            --muted: #858585;
+            --line: rgba(255,255,255,.11);
+            --soft-line: rgba(255,255,255,.055);
+            --accent: #d7ff4f;
+            --accent-dark: #9dbb20;
+            --max: 1440px;
+        }
 
-<style> /* ========================================================= GKT — GLOBAL ========================================================= */ :root { --bg: #080808; --fg: #f2f0ea; --muted: #858585; --line: rgba(255,255,255,.11); --soft-line: rgba(255,255,255,.055); --accent: #d7ff4f; --accent-dark: #9dbb20; --max: 1440px; } * { margin: 0; padding: 0; box-sizing: border-box; } html { scroll-behavior: smooth; background: var(--bg); } body { background: var(--bg); color: var(--fg); font-family: "Inter", sans-serif; overflow-x: hidden; cursor: default; } body::selection { background: var(--accent); color: #000; } a { color: inherit; text-decoration: none; } button { font: inherit; } img { max-width: 100%; display: block; } /* ========================================================= CUSTOM CURSOR ========================================================= */ .cursor { position: fixed; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); mix-blend-mode: difference; transition: width .25s ease, height .25s ease; } .cursor-ring { position: fixed; width: 34px; height: 34px; border: 1px solid rgba(215,255,79,.55); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%, -50%); transition: width .35s ease, height .35s ease, border-color .3s ease; } .cursor-grow .cursor { width: 16px; height: 16px; } .cursor-grow .cursor-ring { width: 60px; height: 60px; border-color: var(--accent); } /* ========================================================= GRID ========================================================= */ .page-grid { position: fixed; inset: 0; pointer-events: none; z-index: 0; display: grid; grid-template-columns: repeat(12, 1fr); padding: 0 4vw; opacity: .4; } .page-grid span { border-left: 1px solid var(--soft-line); } .page-grid span:last-child { border-right: 1px solid var(--soft-line); } /* ========================================================= NAVIGATION ========================================================= */ .nav { position: fixed; top: 0; left: 0; width: 100%; height: 82px; padding: 0 4vw; display: flex; align-items: center; justify-content: space-between; z-index: 1000; transition: background .4s ease, border-color .4s ease; } .nav.scrolled { background: rgba(8,8,8,.78); backdrop-filter: blur(18px); border-bottom: 1px solid var(--line); } .brand { font-family: "Space Grotesk", sans-serif; font-size: 25px; font-weight: 600; letter-spacing: -.08em; } .brand span { color: var(--accent); } .nav-right { display: flex; align-items: center; gap: 30px; } .nav-status { font-family: "DM Mono", monospace; font-size: 10px; color: #777; letter-spacing: .1em; text-transform: uppercase; } .nav-status i { display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); } .menu-button { border: 0; background: none; color: var(--fg); cursor: pointer; font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; } /* ========================================================= HERO ========================================================= */ .hero { min-height: 100vh; position: relative; display: flex; align-items: flex-end; padding: 150px 4vw 7vw; overflow: hidden; z-index: 1; } .hero-orbit { position: absolute; width: 58vw; height: 58vw; max-width: 850px; max-height: 850px; right: -10vw; top: 50%; transform: translateY(-50%); border: 1px solid rgba(215,255,79,.13); border-radius: 50%; } .hero-orbit::before, .hero-orbit::after { content: ""; position: absolute; inset: 8%; border: 1px solid rgba(255,255,255,.06); border-radius: 50%; } .hero-orbit::after { inset: 24%; border-color: rgba(215,255,79,.09); } .orbit-node { position: absolute; width: 12px; height: 12px; background: var(--accent); border-radius: 50%; top: 11%; left: 24%; box-shadow: 0 0 30px rgba(215,255,79,.7); } .hero-content { position: relative; z-index: 3; width: 100%; max-width: var(--max); margin: auto; } .hero-kicker { font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); margin-bottom: 30px; } .hero-kicker span { color: var(--accent); } .hero-title { font-family: "Space Grotesk", sans-serif; font-size: clamp(72px, 12.2vw, 190px); font-weight: 500; line-height: .84; letter-spacing: -.075em; max-width: 1100px; } .hero-title .outline { color: transparent; -webkit-text-stroke: 1px rgba(242,240,234,.65); } .hero-title .accent { color: var(--accent); } .hero-bottom { margin-top: 65px; display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: end; } .hero-description { max-width: 500px; font-size: 15px; line-height: 1.8; color: #999; } .hero-index { justify-self: end; font-family: "DM Mono", monospace; font-size: 10px; line-height: 1.8; color: #666; text-transform: uppercase; letter-spacing: .1em; text-align: right; } .scroll-indicator { position: absolute; left: 4vw; bottom: 28px; font-family: "DM Mono", monospace; font-size: 9px; color: #666; letter-spacing: .15em; text-transform: uppercase; } .scroll-indicator::after { content: ""; display: inline-block; width: 60px; height: 1px; margin-left: 14px; vertical-align: middle; background: #555; } /* ========================================================= MANIFESTO ========================================================= */ .manifesto { min-height: 100vh; position: relative; z-index: 2; padding: 16vw 8vw; display: flex; align-items: center; } .manifesto-inner { max-width: 1180px; margin: auto; } .eyebrow { font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: .18em; color: var(--accent); text-transform: uppercase; margin-bottom: 35px; } .manifesto-text { font-family: "Space Grotesk", sans-serif; font-size: clamp(38px, 6vw, 88px); font-weight: 400; line-height: 1.05; letter-spacing: -.055em; } .manifesto-text .dim { color: #454545; } .manifesto-text .bright { color: var(--fg); } /* ========================================================= CONVERGENCE ========================================================= */ .convergence { position: relative; z-index: 2; padding: 8vw 4vw 14vw; } .section-head { max-width: var(--max); margin: auto; display: flex; justify-content: space-between; align-items: end; margin-bottom: 70px; } .section-number { font-family: "DM Mono", monospace; color: #555; font-size: 10px; letter-spacing: .15em; } .section-title { font-family: "Space Grotesk", sans-serif; font-size: clamp(42px, 7vw, 100px); font-weight: 400; letter-spacing: -.06em; line-height: .95; } .convergence-stage { max-width: var(--max); margin: auto; min-height: 650px; position: relative; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); overflow: hidden; } .convergence-line { position: absolute; top: 50%; left: 0; width: 100%; height: 1px; background: var(--line); } .convergence-center { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 145px; height: 145px; border-radius: 50%; border: 1px solid rgba(215,255,79,.55); display: flex; align-items: center; justify-content: center; background: #080808; z-index: 3; box-shadow: 0 0 80px rgba(215,255,79,.07); } .convergence-center strong { font-family: "Space Grotesk", sans-serif; font-size: 32px; letter-spacing: -.08em; } .convergence-center span { color: var(--accent); } .concept { position: absolute; font-family: "Space Grotesk", sans-serif; font-size: clamp(22px, 3vw, 48px); letter-spacing: -.04em; transition: color .4s ease, transform .4s ease; } .concept:hover { color: var(--accent); transform: scale(1.04); } .concept small { display: block; margin-top: 7px; font-family: "DM Mono", monospace; color: #555; font-size: 8px; letter-spacing: .12em; text-transform: uppercase; } .c1 { top: 10%; left: 6%; } .c2 { top: 17%; right: 10%; } .c3 { bottom: 17%; left: 10%; } .c4 { bottom: 10%; right: 7%; } .c5 { top: 47%; left: 5%; } .c6 { top: 47%; right: 5%; } /* ========================================================= FRONTIER ========================================================= */ .frontier { position: relative; z-index: 2; padding: 10vw 4vw; background: #deded9; color: #0a0a0a; } .frontier .section-number { color: #777; } .frontier-grid { max-width: var(--max); margin: auto; } .frontier-intro { display: grid; grid-template-columns: 1.2fr .8fr; gap: 8vw; align-items: end; margin-bottom: 90px; } .frontier-title { font-family: "Space Grotesk", sans-serif; font-size: clamp(55px, 9vw, 130px); line-height: .85; letter-spacing: -.08em; } .frontier-copy { max-width: 370px; color: #555; font-size: 14px; line-height: 1.8; } .frontier-list { border-top: 1px solid #aaa; } .frontier-item { min-height: 125px; border-bottom: 1px solid #aaa; display: grid; grid-template-columns: 90px 1fr 70px; align-items: center; transition: padding .35s ease; } .frontier-item:hover { padding-left: 20px; } .frontier-item .no { font-family: "DM Mono", monospace; font-size: 10px; color: #777; } .frontier-item h3 { font-family: "Space Grotesk", sans-serif; font-size: clamp(25px, 3vw, 42px); font-weight: 400; letter-spacing: -.04em; } .frontier-item .arrow { font-size: 24px; text-align: right; } /* ========================================================= VISION / PHILOSOPHY ========================================================= */ .vision { position: relative; z-index: 2; padding: 15vw 4vw; } .vision-inner { max-width: var(--max); margin: auto; } .vision-quote { max-width: 1150px; font-family: "Space Grotesk", sans-serif; font-size: clamp(45px, 8vw, 115px); line-height: .94; letter-spacing: -.075em; } .vision-quote em { font-style: normal; color: var(--accent); } .vision-footer { margin-top: 90px; display: flex; justify-content: space-between; gap: 40px; border-top: 1px solid var(--line); padding-top: 20px; } .vision-footer p { max-width: 430px; color: #888; font-size: 13px; line-height: 1.8; } .mono { font-family: "DM Mono", monospace; font-size: 9px; letter-spacing: .13em; text-transform: uppercase; color: #555; } /* ========================================================= ORIGIN ========================================================= */ .origin { position: relative; z-index: 2; padding: 10vw 4vw 15vw; border-top: 1px solid var(--line); } .origin-grid { max-width: var(--max); margin: auto; display: grid; grid-template-columns: .7fr 1.3fr; gap: 10vw; } .origin-title { font-family: "Space Grotesk", sans-serif; font-size: clamp(50px, 7vw, 100px); letter-spacing: -.07em; line-height: .9; } .origin-content { max-width: 720px; } .origin-content p { font-size: clamp(22px, 3vw, 38px); line-height: 1.18; letter-spacing: -.035em; color: #bbb; } .origin-content p strong { color: var(--fg); font-weight: 400; } .origin-meta { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 80px; border-top: 1px solid var(--line); } .meta-item { padding: 25px 20px 25px 0; border-right: 1px solid var(--line); } .meta-item:not(:first-child) { padding-left: 20px; } .meta-item:last-child { border-right: 0; } .meta-item span { display: block; font-family: "DM Mono", monospace; font-size: 9px; color: #555; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 15px; } .meta-item strong { font-family: "Space Grotesk", sans-serif; font-size: 18px; font-weight: 400; } /* ========================================================= CALL TO ACTION ========================================================= */ .cta { position: relative; z-index: 2; min-height: 75vh; padding: 8vw 4vw; display: flex; align-items: center; overflow: hidden; background: var(--accent); color: #070707; } .cta-circle { position: absolute; width: 55vw; height: 55vw; max-width: 800px; max-height: 800px; border-radius: 50%; border: 1px solid rgba(0,0,0,.2); right: -15vw; top: 50%; transform: translateY(-50%); } .cta-circle::before { content: ""; position: absolute; inset: 15%; border: 1px solid rgba(0,0,0,.18); border-radius: 50%; } .cta-inner { width: 100%; max-width: var(--max); margin: auto; position: relative; z-index: 2; } .cta-label { font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: .16em; text-transform: uppercase; margin-bottom: 35px; } .cta h2 { max-width: 1000px; font-family: "Space Grotesk", sans-serif; font-size: clamp(65px, 12vw, 180px); line-height: .8; letter-spacing: -.085em; font-weight: 500; } .cta-bottom { margin-top: 80px; display: flex; align-items: center; justify-content: space-between; max-width: 850px; } .cta-bottom p { max-width: 350px; font-size: 13px; line-height: 1.7; } .cta-button { display: inline-flex; align-items: center; gap: 20px; padding: 17px 25px; border: 1px solid #111; border-radius: 100px; font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; transition: all .3s ease; } .cta-button:hover { background: #080808; color: var(--accent); transform: translateY(-4px); } /* ========================================================= FOOTER ========================================================= */ footer { position: relative; z-index: 2; padding: 55px 4vw 35px; background: #080808; } .footer-top { max-width: var(--max); margin: auto; display: flex; justify-content: space-between; gap: 40px; padding-bottom: 80px; } .footer-logo { font-family: "Space Grotesk", sans-serif; font-size: clamp(80px, 18vw, 260px); letter-spacing: -.11em; line-height: .7; } .footer-logo span { color: var(--accent); } .footer-right { max-width: 300px; padding-top: 10px; } .footer-right p { color: #777; font-size: 12px; line-height: 1.8; } .footer-bottom { max-width: var(--max); margin: auto; border-top: 1px solid var(--line); padding-top: 20px; display: flex; justify-content: space-between; color: #555; font-family: "DM Mono", monospace; font-size: 9px; text-transform: uppercase; letter-spacing: .1em; } /* ========================================================= REVEAL ANIMATION ========================================================= */ .reveal { opacity: 0; transform: translateY(35px); transition: opacity 1s cubic-bezier(.16,1,.3,1), transform 1s cubic-bezier(.16,1,.3,1); } .reveal.visible { opacity: 1; transform: translateY(0); } /* ========================================================= RESPONSIVE ========================================================= */ @media (max-width: 850px) { .cursor, .cursor-ring { display: none; } .page-grid { grid-template-columns: repeat(6, 1fr); padding: 0 5vw; } .nav { height: 70px; padding: 0 5vw; } .nav-status { display: none; } .hero { padding: 130px 5vw 90px; } .hero-orbit { width: 100vw; height: 100vw; right: -45vw; opacity: .55; } .hero-title { font-size: clamp(60px, 17vw, 115px); } .hero-bottom { grid-template-columns: 1fr; margin-top: 45px; } .hero-index { justify-self: start; text-align: left; } .scroll-indicator { display: none; } .manifesto { padding: 28vw 7vw; min-height: 80vh; } .convergence { padding: 20vw 5vw; } .section-head { margin-bottom: 45px; } .convergence-stage { min-height: 500px; } .convergence-center { width: 105px; height: 105px; } .convergence-center strong { font-size: 24px; } .concept { font-size: 20px; } .c1 { top: 8%; left: 4%; } .c2 { top: 17%; right: 4%; } .c3 { bottom: 17%; left: 5%; } .c4 { bottom: 8%; right: 4%; } .c5 { top: 44%; left: 3%; } .c6 { top: 56%; right: 3%; } .frontier { padding: 18vw 5vw; } .frontier-intro { grid-template-columns: 1fr; gap: 40px; margin-bottom: 55px; } .frontier-item { min-height: 105px; grid-template-columns: 45px 1fr 30px; } .frontier-item h3 { font-size: 25px; } .vision { padding: 25vw 5vw; } .vision-footer { flex-direction: column; margin-top: 55px; } .origin { padding: 18vw 5vw; } .origin-grid { grid-template-columns: 1fr; gap: 55px; } .origin-meta { grid-template-columns: 1fr; } .meta-item { border-right: 0; border-bottom: 1px solid var(--line); padding: 20px 0; } .meta-item:not(:first-child) { padding-left: 0; } .meta-item:last-child { border-bottom: 0; } .cta { min-height: 80vh; padding: 18vw 5vw; } .cta-circle { width: 110vw; height: 110vw; right: -65vw; } .cta-bottom { margin-top: 60px; flex-direction: column; align-items: flex-start; gap: 35px; } .footer-top { flex-direction: column; padding-bottom: 55px; } .footer-logo { font-size: 32vw; } .footer-bottom { flex-direction: column; gap: 12px; } } </style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        html {
+            scroll-behavior: smooth;
+            background: var(--bg);
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--fg);
+            font-family: "Inter", sans-serif;
+            overflow-x: hidden;
+            cursor: default;
+        }
+
+        body::selection {
+            background: var(--accent);
+            color: #000;
+        }
+
+        a { color: inherit; text-decoration: none; }
+        button { font: inherit; }
+        img { max-width: 100%; display: block; }
+
+        /* =========================================================
+           CUSTOM CURSOR
+           ========================================================= */
+        .cursor {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent);
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: difference;
+            transition: width .25s ease, height .25s ease;
+        }
+
+        .cursor-ring {
+            position: fixed;
+            width: 34px;
+            height: 34px;
+            border: 1px solid rgba(215,255,79,.55);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            transition: width .35s ease, height .35s ease, border-color .3s ease;
+        }
+
+        .cursor-grow .cursor {
+            width: 16px;
+            height: 16px;
+        }
+
+        .cursor-grow .cursor-ring {
+            width: 60px;
+            height: 60px;
+            border-color: var(--accent);
+        }
+
+        /* =========================================================
+           GRID
+           ========================================================= */
+        .page-grid {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            padding: 0 4vw;
+            opacity: .4;
+        }
+
+        .page-grid span {
+            border-left: 1px solid var(--soft-line);
+        }
+
+        .page-grid span:last-child {
+            border-right: 1px solid var(--soft-line);
+        }
+
+        /* =========================================================
+           NAVIGATION
+           ========================================================= */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 82px;
+            padding: 0 4vw;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 1000;
+            transition: background .4s ease, border-color .4s ease;
+        }
+
+        .nav.scrolled {
+            background: rgba(8,8,8,.78);
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .brand {
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 25px;
+            font-weight: 600;
+            letter-spacing: -.08em;
+        }
+
+        .brand span {
+            color: var(--accent);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .nav-status {
+            font-family: "DM Mono", monospace;
+            font-size: 10px;
+            color: #777;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+        }
+
+        .nav-status i {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            margin-right: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 12px var(--accent);
+        }
+
+        .menu-button {
+            border: 0;
+            background: none;
+            color: var(--fg);
+            cursor: pointer;
+            font-family: "DM Mono", monospace;
+            font-size: 10px;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+        }
+
+        /* =========================================================
+           HERO & 3D CANVAS
+           ========================================================= */
+        .hero {
+            min-height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            padding: 150px 4vw 7vw;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        #hero-canvas {
+            position: absolute;
+            top: 0;
+            right: -5vw;
+            width: 60vw;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0.85;
+        }
+
+        .hero-orbit {
+            position: absolute;
+            width: 58vw;
+            height: 58vw;
+            max-width: 850px;
+            max-height: 850px;
+            right: -10vw;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 1px solid rgba(215,255,79,.13);
+            border-radius: 50%;
+        }
+
+        .hero-orbit::before,
+        .hero-orbit::after {
+            content: "";
+            position: absolute;
+            inset: 8%;
+            border: 1px solid rgba(255,255,255,.06);
+            border-radius: 50%;
+        }
+
+        .hero-orbit::after {
+            inset: 24%;
+            border-color: rgba(215,255,79,.09);
+        }
+
+        .orbit-node {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: var(--accent);
+            border-radius: 50%;
+            top: 11%;
+            left: 24%;
+            box-shadow: 0 0 30px rgba(215,255,79,.7);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            width: 100%;
+            max-width: var(--max);
+            margin: auto;
+        }
+
+        .hero-kicker {
+            font-family: "DM Mono", monospace;
+            font-size: 10px;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 30px;
+        }
+
+        .hero-kicker span {
+            color: var(--accent);
+        }
+
+        .hero-title {
+            font-family: "Space Grotesk", sans-serif;
+            font-size: clamp(72px, 12.2vw, 190px);
+            font-weight: 500;
+            line-height: .84;
+            letter-spacing: -.075em;
+            max-width: 1100px;
+        }
+
+        .hero-title .outline {
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(242,240,234,.65);
+        }
+
+        .hero-title .accent {
+            color: var(--accent);
+        }
+
+        .hero-bottom {
+            margin-top: 65px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: end;
+        }
+
+        .hero-description {
+            max-width: 500px;
+            font-size: 15px;
+            line-height: 1.8;
+            color: #999;
+        }
+
+        .hero-index {
+            justify-self: end;
+            font-family: "DM Mono", monospace;
+            font-size: 10px;
+            line-height: 1.8;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: .1em;
+            text-align: right;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            left: 4vw;
+            bottom: 28px;
+            font-family: "DM Mono", monospace;
+            font-size: 9px;
+            color: #666;
+            letter-spacing: .15em;
+            text-transform: uppercase;
+        }
+
+        .scroll-indicator::after {
+            content: "";
+            display: inline-block;
+            width: 60px;
+            height: 1px;
+            margin-left: 14px;
+            vertical-align: middle;
+            background: #555;
+        }
+
+        /* =========================================================
+           MANIFESTO
+           ========================================================= */
+        .manifesto {
+            min-height: 100vh;
+            position: relative;
+            z-index: 2;
+            padding: 16vw 8vw;
+            display: flex;
+            align-items: center;
+        }
+
+        .manifesto-inner {
+            max-width: 1180px;
+            margin: auto;
+        }
+
+        .eyebrow {
+            font-family: "DM Mono", monospace;
+            font-size: 10px;
+            letter-spacing: .18em;
+            color: var(--accent);
+            text-transform: uppercase;
+            margin-bottom: 35px;
+        }
+
+        .manifesto-text {
+            font-family: "Space Grotesk", sans-serif;
+            font-size: clamp(38px, 6vw, 88px);
+            font-weight: 400;
+            line-height: 1.05;
+            letter-spacing: -.055em;
+        }
+
+        .manifesto-text .dim { color: #454545; }
+        .manifesto-text .bright { color: var(--fg); }
+
+        /* =========================================================
+           CONVERGENCE
+           ========================================================= */
+        .convergence {
+            position: relative;
+            z-index: 2;
+            padding: 8vw 4vw 14vw;
+        }
+
+        .section-head {
+            max-width: var(--max);
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            margin-bottom: 70px;
+        }
+
+        .section-number {
+            font-family: "DM Mono", monospace;
+            color: #555;
+            font-size: 10px;
+            letter-spacing: .15em;
+        }
+
+        .section-title {
+            font-family: "Space Grotesk", sans-serif;
+            font-size: clamp(42px, 7vw, 100px);
+            font-weight: 400;
+            letter-spacing: -.06em;
+            line-height: .95;
+        }
+
+        .convergence-stage {
+            max-width: var(--max);
+            margin: auto;
+            min-height: 650px;
+            position: relative;
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+            overflow: hidden;
+        }
+
+        .convergence-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: var(--line);
+        }
+
+        .convergence-center {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 145px;
+            height: 145px;
+            border-radius: 50%;
+            border: 1px solid rgba(215,255,79,.55);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #080808;
+            z-index: 3;
+            box-shadow: 0 0 80px rgba(215,255,79,.07);
+        }
+
+        .convergence-center strong {
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 32px;
+            letter-spacing: -.08em;
+        }
+
+        .convergence-center span {
+            color: var(--accent);
+        }
+
+        .concept {
+            position: absolute;
+            font-family: "Space Grotesk", sans-serif;
+            font-size: clamp(22px, 3vw, 48px);
+            letter-spacing: -.04em;
+            transition: color .4s ease, transform .4s ease;
+        }
+
+        .concept:hover {
+            color: var(--accent);
+            transform: scale(1.04);
+        }
+
+        .concept small {
+            display: block;
+            margin-top: 7px;
+            font-family: "DM Mono", monospace;
+            color: #555;
+            font-size: 8px;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+        }
+
+        .c1 { top: 10%; left: 6%; }
+        .c2 { top: 17%; right: 10%; }
+        .c3 { bottom: 17%; left: 10%; }
+        .c4 { bottom: 10%; right: 7%; }
+        .c5 { top: 47%; left: 5%; }
+        .c6 { top: 47%; right: 5%; }
+
+        /* =========================================================
+           FRONTIER
+           ========================================================= */
+        .frontier {
+            position: relative;
+            z-index: 2;
+            padding: 10vw 4vw;
+            background: #deded9;
+            color: #0a0a0a;
+        }
+
+        .frontier .section-number { color: #777; }
+
+        .frontier-grid {
+            max-width: var(--max);
+            margin: auto;
+        }
+
+        .frontier-intro {
+            display: grid;
+            grid-template-columns: 1.2fr .8fr;
+            gap: 8vw;
+            align-items: end;
+            margin-bottom: 90px;
+        }
+
+        .frontier-title {
+            font-family: "Space Grotesk", sans-serif;
+            font-size: clamp(55px, 9vw, 130px);
+            line-height: .85;
+            letter-spacing: -.08em;
+        }
+
+        .frontier-copy {
+            max-width: 370px;
+            color: #555;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .frontier-list {
+            border-top: 1px solid #aaa;
+        }
+
+        .frontier-item {
+            min-height: 125px;
+            border-bottom: 1px solid #aaa;
+            display: grid;
+            grid-template-columns: 90px 1fr 70px;
+            align-items: center;
+            transition: padding .35s ease;
+        }
+
+        .frontier-item:hover {
+            padding-left: 20px;
+        }
+
+        .frontier-item .no {
+            font-family: "DM Mono", monospace;
+            font-size: 10px;
+            color: #777;
+        }
+
+        .frontier-item h3 {
+            font-family: "Space Grotesk", sans-serif;
+            font-size: clamp(25px, 3vw, 42px);
+            font-weight: 400;
+            letter-spacing: -.04em;
+        }
+
+        .frontier-item .arrow {
+            font-size: 24px;
+            text-align: right;
+        }
+
+        /* =========================================================
+           VISION / PHILOSOPHY
+           ========================================================= */
+        .vision {
+            position: relative;
+            z-index: 2;
+            padding: 15vw 4vw;
+        }
+
+        .vision-inner {
+            max-width: var(--max);
+            margin: auto;
+        }
+
+        .vision-quote {
+            max-width: 1150px;
+            font-family: "Space Grotesk", sans-serif;
+            font-size: clamp(45px, 8vw, 115px);
+            line-height: .94;
+            letter-spacing: -.075em;
+        }
+
+        .vision-quote em {
+            font-style: normal;
+            color: var(--accent);
+        }
+
+        .vision-footer {
+            margin-top: 90px;
+            display: flex;
+            justify-content: space-between;
+            gap: 40px;
+            border-top: 1px solid var(--line);
+            padding-top: 20px;
+        }
+
+        .vision-footer p {
+            max-width: 430px;
+            color: #888;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .mono {
+            font-family: "DM Mono", monospace;
+            font-size: 9px;
+            letter-spacing: .13em;
+            text-transform: uppercase;
+            color: #555;
+        }
+
+        /* =========================================================
+           ORIGIN
+           ========================================================= */
+        .origin {
+            position: relative;
+            z-index: 2;
+            padding: 10vw 4vw 15vw;
+            border-top: 1px solid var(--line);
+        }
+
+        .origin-grid {
+            max-width: var(--max);
+            margin: auto;
+            display: grid;
+            grid-template-columns: .7fr 1.3fr;
+            gap: 10vw;
+        }
+
+        .origin-title {
+            font-family: "Space Grotesk", sans-serif;
+            font-size: clamp(50px, 7vw, 100px);
+            letter-spacing: -.07em;
+            line-height: .9;
+        }
+
+        .origin-content {
+            max-width: 720px;
+        }
+
+        .origin-content p {
+            font-size: clamp(22px, 3vw, 38px);
+            line-height: 1.18;
+            letter-spacing: -.035em;
+            color: #bbb;
+        }
+
+        .origin-content p strong {
+            color: var(--fg);
+            font-weight: 400;
+        }
+
+        .origin-meta {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            margin-top: 80px;
+            border-top: 1px solid var(--line);
+        }
+
+        .meta-item {
+            padding: 25px 20px 25px 0;
+            border-right: 1px solid var(--line);
+        }
+
+        .meta-item:not(:first-child) {
+            padding-left: 20px;
+        }
+
+        .meta-item:last-child {
+            border-right: 0;
+        }
+
+        .meta-item span {
+            display: block;
+            font-family: "DM Mono", monospace;
+            font-size: 9px;
+            color: #555;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        .meta-item strong {
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 18px;
+            font-weight: 400;
+        }
+
+        /* =========================================================
+           CALL TO ACTION
+           ========================================================= */
+        .cta {
+            position: relative;
+            z-index: 2;
+            min-height: 75vh;
+            padding: 8vw 4vw;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            background: var(--accent);
+            color: #070707;
+        }
+
+        .cta-circle {
+            position: absolute;
+            width: 55vw;
+            height: 55vw;
+            max-width: 800px;
+            max-height: 800px;
+            border-radius: 50%;
+            border: 1px solid rgba(0,0,0,.2);
+            right: -15vw;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .cta-circle::before {
+            content: "";
+            position: absolute;
+            inset: 15%;
+            border: 1px solid rgba(0,0,0,.18);
+            border-radius: 50%;
+        }
+
+        .cta-inner {
+            width: 100%;
+            max-width: var(--max);
+            margin: auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-label {
+            font-family: "DM Mono", monospace;
+            font-size: 10px;
+            letter-spacing: .16em;
+            text-transform: uppercase;
+            margin-bottom: 35px;
+        }
+
+        .cta h2 {
+            max-width: 1000px;
+            font-family: "Space Grotesk", sans-serif;
+            font-size: clamp(65px, 12vw, 180px);
+            line-height: .8;
+            letter-spacing: -.085em;
+            font-weight: 500;
+        }
+
+        .cta-bottom {
+            margin-top: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 850px;
+        }
+
+        .cta-bottom p {
+            max-width: 350px;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 20px;
+            padding: 17px 25px;
+            border: 1px solid #111;
+            border-radius: 100px;
+            font-family: "DM Mono", monospace;
+            font-size: 10px;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            transition: all .3s ease;
+        }
+
+        .cta-button:hover {
+            background: #080808;
+            color: var(--accent);
+            transform: translateY(-4px);
+        }
+
+        /* =========================================================
+           FOOTER
+           ========================================================= */
+        footer {
+            position: relative;
+            z-index: 2;
+            padding: 55px 4vw 35px;
+            background: #080808;
+        }
+
+        .footer-top {
+            max-width: var(--max);
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            gap: 40px;
+            padding-bottom: 80px;
+        }
+
+        .footer-logo {
+            font-family: "Space Grotesk", sans-serif;
+            font-size: clamp(80px, 18vw, 260px);
+            letter-spacing: -.11em;
+            line-height: .7;
+        }
+
+        .footer-logo span {
+            color: var(--accent);
+        }
+
+        .footer-right {
+            max-width: 300px;
+            padding-top: 10px;
+        }
+
+        .footer-right p {
+            color: #777;
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        .footer-bottom {
+            max-width: var(--max);
+            margin: auto;
+            border-top: 1px solid var(--line);
+            padding-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            color: #555;
+            font-family: "DM Mono", monospace;
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: .1em;
+        }
+
+        /* =========================================================
+           REVEAL ANIMATION
+           ========================================================= */
+        .reveal {
+            opacity: 0;
+            transform: translateY(35px);
+            transition: opacity 1s cubic-bezier(.16,1,.3,1), transform 1s cubic-bezier(.16,1,.3,1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* =========================================================
+           RESPONSIVE
+           ========================================================= */
+        @media (max-width: 850px) {
+            .cursor, .cursor-ring { display: none; }
+            .page-grid { grid-template-columns: repeat(6, 1fr); padding: 0 5vw; }
+            .nav { height: 70px; padding: 0 5vw; }
+            .nav-status { display: none; }
+            .hero { padding: 130px 5vw 90px; }
+            
+            #hero-canvas {
+                width: 100vw;
+                right: -20vw;
+                opacity: 0.6;
+            }
+            
+            .hero-orbit { width: 100vw; height: 100vw; right: -45vw; opacity: .55; }
+            .hero-title { font-size: clamp(60px, 17vw, 115px); }
+            .hero-bottom { grid-template-columns: 1fr; margin-top: 45px; }
+            .hero-index { justify-self: start; text-align: left; }
+            .scroll-indicator { display: none; }
+            .manifesto { padding: 28vw 7vw; min-height: 80vh; }
+            .convergence { padding: 20vw 5vw; }
+            .section-head { margin-bottom: 45px; }
+            .convergence-stage { min-height: 500px; }
+            .convergence-center { width: 105px; height: 105px; }
+            .convergence-center strong { font-size: 24px; }
+            .concept { font-size: 20px; }
+            .c1 { top: 8%; left: 4%; }
+            .c2 { top: 17%; right: 4%; }
+            .c3 { bottom: 17%; left: 5%; }
+            .c4 { bottom: 8%; right: 4%; }
+            .c5 { top: 44%; left: 3%; }
+            .c6 { top: 56%; right: 3%; }
+            .frontier { padding: 18vw 5vw; }
+            .frontier-intro { grid-template-columns: 1fr; gap: 40px; margin-bottom: 55px; }
+            .frontier-item { min-height: 105px; grid-template-columns: 45px 1fr 30px; }
+            .frontier-item h3 { font-size: 25px; }
+            .vision { padding: 25vw 5vw; }
+            .vision-footer { flex-direction: column; margin-top: 55px; }
+            .origin { padding: 18vw 5vw; }
+            .origin-grid { grid-template-columns: 1fr; gap: 55px; }
+            .origin-meta { grid-template-columns: 1fr; }
+            .meta-item { border-right: 0; border-bottom: 1px solid var(--line); padding: 20px 0; }
+            .meta-item:not(:first-child) { padding-left: 0; }
+            .meta-item:last-child { border-bottom: 0; }
+            .cta { min-height: 80vh; padding: 18vw 5vw; }
+            .cta-circle { width: 110vw; height: 110vw; right: -65vw; }
+            .cta-bottom { margin-top: 60px; flex-direction: column; align-items: flex-start; gap: 35px; }
+            .footer-top { flex-direction: column; padding-bottom: 55px; }
+            .footer-logo { font-size: 32vw; }
+            .footer-bottom { flex-direction: column; gap: 12px; }
+        }
+    </style>
 </head>
 
 <body>
 
 <!-- ===================================================== BACKGROUND GRID ===================================================== -->
-
-<div class="page-grid" aria-hidden="true"> <span></span><span></span><span></span><span></span> <span></span><span></span><span></span><span></span> <span></span><span></span><span></span><span></span> </div>
-
-<!-- ===================================================== CUSTOM CURSOR ===================================================== -->
-
-<div class="cursor"></div> <div class="cursor-ring"></div>
-
-<!-- ===================================================== NAVIGATION ===================================================== -->
-
-<header class="nav">
-
-<a href="#" class="brand hover-target">
-    GK<span>T</span>
-</a>
-
-<div class="nav-right">
-
-    <div class="nav-status">
-        <i></i>
-        Vision in progress
-    </div>
-
-    <button class="menu-button hover-target" onclick="window.scrollTo({top:0, behavior:'smooth'})">
-        GKT / 001
-    </button>
-
+<div class="page-grid" aria-hidden="true">
+    <span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span>
 </div>
 
+<!-- ===================================================== CUSTOM CURSOR ===================================================== -->
+<div class="cursor"></div>
+<div class="cursor-ring"></div>
+
+<!-- ===================================================== NAVIGATION ===================================================== -->
+<header class="nav">
+    <a href="#" class="brand hover-target">
+        GK<span>T</span>
+    </a>
+    <div class="nav-right">
+        <div class="nav-status">
+            <i></i>
+            Vision in progress
+        </div>
+        <button class="menu-button hover-target" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+            GKT / 001
+        </button>
+    </div>
 </header>
 
 <main>
-
-<!-- ===================================================== HERO ===================================================== -->
-
-<section class="hero">
-
-<div class="hero-orbit" aria-hidden="true">
-    <div class="orbit-node"></div>
-</div>
-
-<div class="hero-content">
-
-    <div class="hero-kicker reveal">
-        GKT — Global Knowledge & Technology
-        <span> / 001</span>
-    </div>
-
-    <h1 class="hero-title reveal">
-        THE<br>
-        FUTURE IS<br>
-        <span class="outline">ENGINEERED.</span>
-    </h1>
-
-    <div class="hero-bottom">
-
-        <p class="hero-description reveal">
-            A growing vision at the intersection of knowledge,
-            education, engineering, technology and industry.
-            GKT exists to understand what is possible 
-            and then build toward it.
-        </p>
-
-        <div class="hero-index reveal">
-            KNOWLEDGE<br>
-            EDUCATION<br>
-            ENGINEERING<br>
-            TECHNOLOGY<br>
-            INDUSTRY
+    <!-- ===================================================== HERO ===================================================== -->
+    <section class="hero">
+        <div class="hero-orbit" aria-hidden="true">
+            <div class="orbit-node"></div>
         </div>
 
-    </div>
+        <!-- 3D Canvas Container -->
+        <canvas id="hero-canvas"></canvas>
 
-</div>
-
-<div class="scroll-indicator">
-    Scroll to explore
-</div>
-
-</section>
-
-<!-- ===================================================== MANIFESTO ===================================================== -->
-
-<section class="manifesto">
-
-<div class="manifesto-inner">
-
-    <div class="eyebrow reveal">
-        The idea
-    </div>
-
-    <div class="manifesto-text reveal">
-
-        <span class="dim">The world does not need</span><br>
-
-        <span class="bright">
-            more information.
-        </span>
-
-        <br><br>
-
-        <span class="dim">
-            It needs people who can
-        </span><br>
-
-        <span class="bright">
-            understand it,
-        </span>
-
-        <br>
-
-        <span class="bright">
-            question it,
-        </span>
-
-        <br>
-
-        <span class="bright">
-            engineer it,
-        </span>
-
-        <br>
-
-        <span class="bright">
-            and change it.
-        </span>
-
-    </div>
-
-</div>
-
-</section>
-
-<!-- ===================================================== CONVERGENCE ===================================================== -->
-
-<section class="convergence">
-
-<div class="section-head">
-
-    <div>
-        <div class="section-number">02 / 05</div>
-    </div>
-
-    <h2 class="section-title">
-        THE<br>
-        CONVERGENCE
-    </h2>
-
-</div>
-
-
-<div class="convergence-stage reveal">
-
-    <div class="convergence-line"></div>
-
-    <div class="convergence-center">
-        <strong>GK<span>T</span></strong>
-    </div>
-
-    <div class="concept c1">
-        Knowledge
-        <small>Understand</small>
-    </div>
-
-    <div class="concept c2">
-        Education
-        <small>Transmit</small>
-    </div>
-
-    <div class="concept c3">
-        Engineering
-        <small>Build</small>
-    </div>
-
-    <div class="concept c4">
-        Technology
-        <small>Amplify</small>
-    </div>
-
-    <div class="concept c5">
-        Industry
-        <small>Scale</small>
-    </div>
-
-    <div class="concept c6">
-        Impact
-        <small>Transform</small>
-    </div>
-
-</div>
-
-</section>
-
-<!-- ===================================================== FRONTIER ===================================================== -->
-
-<section class="frontier">
-
-<div class="frontier-grid">
-
-    <div class="frontier-intro">
-
-        <div>
-
-            <div class="section-number">
-                03 / 05
+        <div class="hero-content">
+            <div class="hero-kicker reveal">
+                GKT — Global Knowledge & Technology
+                <span> / 001</span>
             </div>
 
-            <h2 class="frontier-title">
+            <h1 class="hero-title reveal">
                 THE<br>
-                FRONTIER
+                FUTURE IS<br>
+                <span class="outline">ENGINEERED.</span>
+            </h1>
+
+            <div class="hero-bottom">
+                <p class="hero-description reveal">
+                    A growing vision at the intersection of knowledge,
+                    education, engineering, technology and industry.
+                    GKT exists to understand what is possible 
+                    and then build toward it.
+                </p>
+
+                <div class="hero-index reveal">
+                    KNOWLEDGE<br>
+                    EDUCATION<br>
+                    ENGINEERING<br>
+                    TECHNOLOGY<br>
+                    INDUSTRY
+                </div>
+            </div>
+        </div>
+
+        <div class="scroll-indicator">
+            Scroll to explore
+        </div>
+    </section>
+
+    <!-- ===================================================== MANIFESTO ===================================================== -->
+    <section class="manifesto">
+        <div class="manifesto-inner">
+            <div class="eyebrow reveal">
+                The idea
+            </div>
+            <div class="manifesto-text reveal">
+                <span class="dim">The world does not need</span><br>
+                <span class="bright">more information.</span>
+                <br><br>
+                <span class="dim">It needs people who can</span><br>
+                <span class="bright">understand it,</span><br>
+                <span class="bright">question it,</span><br>
+                <span class="bright">engineer it,</span><br>
+                <span class="bright">and change it.</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================================================== CONVERGENCE ===================================================== -->
+    <section class="convergence">
+        <div class="section-head">
+            <div>
+                <div class="section-number">02 / 05</div>
+            </div>
+            <h2 class="section-title">
+                THE<br>
+                CONVERGENCE
             </h2>
-
         </div>
 
-        <p class="frontier-copy">
-            GKT is designed to grow. What begins as an
-            individual's curiosity can become research,
-            education, experimentation, collaboration
-            and eventually something much larger.
-        </p>
-
-    </div>
-
-
-    <div class="frontier-list">
-
-        <a href="#" class="frontier-item hover-target">
-
-            <span class="no">01</span>
-
-            <h3>Ideas & Questions</h3>
-
-            <span class="arrow">↗</span>
-
-        </a>
-
-
-        <a href="#" class="frontier-item hover-target">
-
-            <span class="no">02</span>
-
-            <h3>Research & Knowledge</h3>
-
-            <span class="arrow">↗</span>
-
-        </a>
-
-
-        <a href="#" class="frontier-item hover-target">
-
-            <span class="no">03</span>
-
-            <h3>Engineering & Experiments</h3>
-
-            <span class="arrow">↗</span>
-
-        </a>
-
-
-        <a href="#" class="frontier-item hover-target">
-
-            <span class="no">04</span>
-
-            <h3>Technology & Systems</h3>
-
-            <span class="arrow">↗</span>
-
-        </a>
-
-
-        <a href="#" class="frontier-item hover-target">
-
-            <span class="no">05</span>
-
-            <h3>Industry & Collaboration</h3>
-
-            <span class="arrow">↗</span>
-
-        </a>
-
-    </div>
-
-</div>
-
-</section>
-
-<!-- ===================================================== VISION ===================================================== -->
-
-<section class="vision">
-
-<div class="vision-inner">
-
-    <div class="eyebrow reveal">
-        04 / 05 — Vision
-    </div>
-
-    <div class="vision-quote reveal">
-
-        We believe the distance between an
-        <em>idea</em> and an
-        <em>impact</em>
-        should be measured in what we are willing
-        to learn, build and challenge.
-
-    </div>
-
-    <div class="vision-footer">
-
-        <p>
-            GKT begins with one vision, but it is not
-            intended to end with one person. The long-term
-            ambition is to create an ecosystem where
-            curious minds, engineers, researchers,
-            educators and industry can meet.
-        </p>
-
-        <div class="mono">
-            Built for the long term.<br>
-            Open to what comes next.
-        </div>
-
-    </div>
-
-</div>
-
-</section>
-
-<!-- ===================================================== ORIGIN ===================================================== -->
-
-<section class="origin">
-
-<div class="origin-grid">
-
-    <div>
-
-        <div class="section-number">
-            05 / 05
-        </div>
-
-        <h2 class="origin-title">
-            THE<br>
-            ORIGIN
-        </h2>
-
-    </div>
-
-
-    <div class="origin-content">
-
-        <p>
-            GKT began as a personal vision:
-            <strong>to connect knowledge with action.</strong>
-            It starts with Prem, but the destination
-            is something larger than Prem.
-        </p>
-
-
-        <div class="origin-meta">
-
-            <div class="meta-item">
-
-                <span>Origin</span>
-
-                <strong>One vision</strong>
-
+        <div class="convergence-stage reveal">
+            <div class="convergence-line"></div>
+            <div class="convergence-center">
+                <strong>GK<span>T</span></strong>
             </div>
 
-
-            <div class="meta-item">
-
-                <span>Direction</span>
-
-                <strong>Technology × Humanity</strong>
-
+            <div class="concept c1">
+                Knowledge
+                <small>Understand</small>
             </div>
-
-
-            <div class="meta-item">
-
-                <span>Ambition</span>
-
-                <strong>Build what matters</strong>
-
+            <div class="concept c2">
+                Education
+                <small>Transmit</small>
             </div>
-
+            <div class="concept c3">
+                Engineering
+                <small>Build</small>
+            </div>
+            <div class="concept c4">
+                Technology
+                <small>Amplify</small>
+            </div>
+            <div class="concept c5">
+                Industry
+                <small>Scale</small>
+            </div>
+            <div class="concept c6">
+                Impact
+                <small>Transform</small>
+            </div>
         </div>
+    </section>
 
-    </div>
+    <!-- ===================================================== FRONTIER ===================================================== -->
+    <section class="frontier">
+        <div class="frontier-grid">
+            <div class="frontier-intro">
+                <div>
+                    <div class="section-number">03 / 05</div>
+                    <h2 class="frontier-title">
+                        THE<br>
+                        FRONTIER
+                    </h2>
+                </div>
+                <p class="frontier-copy">
+                    GKT is designed to grow. What begins as an
+                    individual's curiosity can become research,
+                    education, experimentation, collaboration
+                    and eventually something much larger.
+                </p>
+            </div>
 
-</div>
+            <div class="frontier-list">
+                <a href="#" class="frontier-item hover-target">
+                    <span class="no">01</span>
+                    <h3>Ideas & Questions</h3>
+                    <span class="arrow">↗</span>
+                </a>
+                <a href="#" class="frontier-item hover-target">
+                    <span class="no">02</span>
+                    <h3>Research & Knowledge</h3>
+                    <span class="arrow">↗</span>
+                </a>
+                <a href="#" class="frontier-item hover-target">
+                    <span class="no">03</span>
+                    <h3>Engineering & Experiments</h3>
+                    <span class="arrow">↗</span>
+                </a>
+                <a href="#" class="frontier-item hover-target">
+                    <span class="no">04</span>
+                    <h3>Technology & Systems</h3>
+                    <span class="arrow">↗</span>
+                </a>
+                <a href="#" class="frontier-item hover-target">
+                    <span class="no">05</span>
+                    <h3>Industry & Collaboration</h3>
+                    <span class="arrow">↗</span>
+                </a>
+            </div>
+        </div>
+    </section>
 
-</section>
+    <!-- ===================================================== VISION ===================================================== -->
+    <section class="vision">
+        <div class="vision-inner">
+            <div class="eyebrow reveal">
+                04 / 05 — Vision
+            </div>
+            <div class="vision-quote reveal">
+                We believe the distance between an
+                <em>idea</em> and an
+                <em>impact</em>
+                should be measured in what we are willing
+                to learn, build and challenge.
+            </div>
+            <div class="vision-footer">
+                <p>
+                    GKT begins with one vision, but it is not
+                    intended to end with one person. The long-term
+                    ambition is to create an ecosystem where
+                    curious minds, engineers, researchers,
+                    educators and industry can meet.
+                </p>
+                <div class="mono">
+                    Built for the long term.<br>
+                    Open to what comes next.
+                </div>
+            </div>
+        </div>
+    </section>
 
-<!-- ===================================================== CTA ===================================================== -->
+    <!-- ===================================================== ORIGIN ===================================================== -->
+    <section class="origin">
+        <div class="origin-grid">
+            <div>
+                <div class="section-number">05 / 05</div>
+                <h2 class="origin-title">
+                    THE<br>
+                    ORIGIN
+                </h2>
+            </div>
+            <div class="origin-content">
+                <p>
+                    GKT began as a personal vision:
+                    <strong>to connect knowledge with action.</strong>
+                    It starts with Prem, but the destination
+                    is something larger than Prem.
+                </p>
+                <div class="origin-meta">
+                    <div class="meta-item">
+                        <span>Origin</span>
+                        <strong>One vision</strong>
+                    </div>
+                    <div class="meta-item">
+                        <span>Direction</span>
+                        <strong>Technology × Humanity</strong>
+                    </div>
+                    <div class="meta-item">
+                        <span>Ambition</span>
+                        <strong>Build what matters</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<section class="cta">
-
-<div class="cta-circle" aria-hidden="true"></div>
-
-<div class="cta-inner">
-
-    <div class="cta-label">
-        The next chapter
-    </div>
-
-    <h2>
-        LET'S<br>
-        BUILD<br>
-        WHAT'S<br>
-        NEXT.
-    </h2>
-
-    <div class="cta-bottom">
-
-        <p>
-            GKT is only the beginning.
-            Research. Ideas. Experiments.
-            Education. Technology.
-            Collaboration.
-        </p>
-
-        <a href="mailto:hello@gkt.com.np"
-           class="cta-button hover-target">
-            Start a conversation
-            <span>↗</span>
-        </a>
-
-    </div>
-
-</div>
-
-</section>
-
+    <!-- ===================================================== CALL TO ACTION ===================================================== -->
+    <section class="cta">
+        <div class="cta-circle" aria-hidden="true"></div>
+        <div class="cta-inner">
+            <div class="cta-label">
+                The next chapter
+            </div>
+            <h2>
+                LET'S<br>
+                BUILD<br>
+                WHAT'S<br>
+                NEXT.
+            </h2>
+            <div class="cta-bottom">
+                <p>
+                    GKT is only the beginning.
+                    Research. Ideas. Experiments.
+                    Education. Technology.
+                    Collaboration.
+                </p>
+                <a href="mailto:hello@gkt.com.np" class="cta-button hover-target">
+                    Start a conversation
+                    <span>↗</span>
+                </a>
+            </div>
+        </div>
+    </section>
 </main>
 
 <!-- ===================================================== FOOTER ===================================================== -->
-
 <footer>
-
-<div class="footer-top">
-
-    <div class="footer-logo">
-        GK<span>T</span>
+    <div class="footer-top">
+        <div class="footer-logo">
+            GK<span>T</span>
+        </div>
+        <div class="footer-right">
+            <p>
+                Knowledge.
+                Education.
+                Engineering.
+                Technology.
+                Industry.
+                Impact.
+            </p>
+        </div>
     </div>
-
-    <div class="footer-right">
-
-        <p>
-            Knowledge.
-            Education.
-            Engineering.
-            Technology.
-            Industry.
-            Impact.
-        </p>
-
+    <div class="footer-bottom">
+        <span>© 2026 GKT</span>
+        <span>The future is engineered.</span>
     </div>
-
-</div>
-
-
-<div class="footer-bottom">
-
-    <span>
-        © 2026 GKT
-    </span>
-
-    <span>
-        The future is engineered.
-    </span>
-
-</div>
-
 </footer>
 
-<script> /* ========================================================= NAVIGATION BLUR ========================================================= */ const nav = document.querySelector(".nav"); window.addEventListener("scroll", () => { if (window.scrollY > 40) { nav.classList.add("scrolled"); } else { nav.classList.remove("scrolled"); } }); /* ========================================================= CUSTOM CURSOR ========================================================= */ const cursor = document.querySelector(".cursor"); const ring = document.querySelector(".cursor-ring"); let mouseX = window.innerWidth / 2; let mouseY = window.innerHeight / 2; let ringX = mouseX; let ringY = mouseY; document.addEventListener("mousemove", e => { mouseX = e.clientX; mouseY = e.clientY; cursor.style.left = mouseX + "px"; cursor.style.top = mouseY + "px"; }); function animateCursor() { ringX += (mouseX - ringX) * .13; ringY += (mouseY - ringY) * .13; ring.style.left = ringX + "px"; ring.style.top = ringY + "px"; requestAnimationFrame(animateCursor); } animateCursor(); document.querySelectorAll(".hover-target").forEach(el => { el.addEventListener("mouseenter", () => { document.body.classList.add("cursor-grow"); }); el.addEventListener("mouseleave", () => { document.body.classList.remove("cursor-grow"); }); }); /* ========================================================= SCROLL REVEAL ========================================================= */ const observer = new IntersectionObserver( entries => { entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add("visible"); observer.unobserve(entry.target); } }); }, { threshold: .12 } ); document.querySelectorAll(".reveal").forEach(el => { observer.observe(el); }); /* ========================================================= HERO ORBIT PARALLAX ========================================================= */ const orbit = document.querySelector(".hero-orbit"); window.addEventListener("mousemove", e => { if (!orbit) return; const x = (e.clientX / window.innerWidth - .5); const y = (e.clientY / window.innerHeight - .5); orbit.style.transform = `translate(${x * 18}px, calc(-50% + ${y * 18}px))`; }); /* ========================================================= REDUCED MOTION ACCESSIBILITY ========================================================= */ if ( window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches ) { document.documentElement.style.scrollBehavior = "auto"; document.querySelectorAll(".reveal").forEach(el => { el.style.opacity = "1"; el.style.transform = "none"; }); } </script>
+<script>
+    /* =========================================================
+       NAVIGATION BLUR
+       ========================================================= */
+    const nav = document.querySelector(".nav");
+    window.addEventListener("scroll", () => {
+        if (window.scrollY > 40) {
+            nav.classList.add("scrolled");
+        } else {
+            nav.classList.remove("scrolled");
+        }
+    });
 
-</body> </html>
+    /* =========================================================
+       CUSTOM CURSOR
+       ========================================================= */
+    const cursor = document.querySelector(".cursor");
+    const ring = document.querySelector(".cursor-ring");
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let ringX = mouseX;
+    let ringY = mouseY;
+
+    document.addEventListener("mousemove", e => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        cursor.style.left = mouseX + "px";
+        cursor.style.top = mouseY + "px";
+    });
+
+    function animateCursor() {
+        ringX += (mouseX - ringX) * .13;
+        ringY += (mouseY - ringY) * .13;
+        ring.style.left = ringX + "px";
+        ring.style.top = ringY + "px";
+        requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+
+    document.querySelectorAll(".hover-target").forEach(el => {
+        el.addEventListener("mouseenter", () => {
+            document.body.classList.add("cursor-grow");
+        });
+        el.addEventListener("mouseleave", () => {
+            document.body.classList.remove("cursor-grow");
+        });
+    });
+
+    /* =========================================================
+       SCROLL REVEAL
+       ========================================================= */
+    const observer = new IntersectionObserver(
+        entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("visible");
+                    observer.unobserve(entry.target);
+                }
+            });
+        },
+        { threshold: .12 }
+    );
+
+    document.querySelectorAll(".reveal").forEach(el => {
+        observer.observe(el);
+    });
+
+    /* =========================================================
+       3D SPHERE (THREE.JS)
+       ========================================================= */
+    (function init3DSphere() {
+        const canvas = document.getElementById('hero-canvas');
+        if (!canvas || typeof THREE === 'undefined') return;
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+        camera.position.z = 18;
+
+        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+
+        const sphereGroup = new THREE.Group();
+        scene.add(sphereGroup);
+
+        // Outer Wireframe Sphere
+        const geoOuter = new THREE.IcosahedronGeometry(6, 4);
+        const matOuter = new THREE.MeshBasicMaterial({
+            color: 0xd7ff4f,
+            wireframe: true,
+            transparent: true,
+            opacity: 0.12
+        });
+        const sphereOuter = new THREE.Mesh(geoOuter, matOuter);
+        sphereGroup.add(sphereOuter);
+
+        // Inner Point Cloud / Node Matrix
+        const geoPoints = new THREE.IcosahedronGeometry(5.8, 5);
+        const matPoints = new THREE.PointsMaterial({
+            color: 0xd7ff4f,
+            size: 0.08,
+            transparent: true,
+            opacity: 0.5
+        });
+        const spherePoints = new THREE.Points(geoPoints, matPoints);
+        sphereGroup.add(spherePoints);
+
+        // Inner Core Ring Structure
+        const geoRing = new THREE.TorusGeometry(3.5, 0.02, 16, 100);
+        const matRing = new THREE.MeshBasicMaterial({
+            color: 0xffffff,
+            wireframe: true,
+            transparent: true,
+            opacity: 0.2
+        });
+        const ring1 = new THREE.Mesh(geoRing, matRing);
+        const ring2 = new THREE.Mesh(geoRing, matRing);
+        ring2.rotation.x = Math.PI / 2;
+        sphereGroup.add(ring1);
+        sphereGroup.add(ring2);
+
+        // Mouse Parallax Interaction
+        let targetX = 0, targetY = 0;
+        window.addEventListener('mousemove', (e) => {
+            targetX = (e.clientX / window.innerWidth - 0.5) * 0.5;
+            targetY = (e.clientY / window.innerHeight - 0.5) * 0.5;
+        });
+
+        // Resize Handler
+        window.addEventListener('resize', () => {
+            if (!canvas.clientWidth || !canvas.clientHeight) return;
+            camera.aspect = canvas.clientWidth / canvas.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+        });
+
+        // Animation Loop
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Constant rotation
+            sphereGroup.rotation.y += 0.0025;
+            sphereGroup.rotation.x += 0.001;
+            ring1.rotation.z += 0.004;
+            ring2.rotation.y += 0.004;
+
+            // Smooth Mouse Follow
+            sphereGroup.rotation.y += (targetX - sphereGroup.rotation.y) * 0.03;
+            sphereGroup.rotation.x += (targetY - sphereGroup.rotation.x) * 0.03;
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+    })();
+
+    /* =========================================================
+       HERO ORBIT PARALLAX
+       ========================================================= */
+    const orbit = document.querySelector(".hero-orbit");
+    window.addEventListener("mousemove", e => {
+        if (!orbit) return;
+        const x = (e.clientX / window.innerWidth - .5);
+        const y = (e.clientY / window.innerHeight - .5);
+        orbit.style.transform = `translate(${x * 18}px, calc(-50% + ${y * 18}px))`;
+    });
+
+    /* =========================================================
+       REDUCED MOTION ACCESSIBILITY
+       ========================================================= */
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        document.documentElement.style.scrollBehavior = "auto";
+        document.querySelectorAll(".reveal").forEach(el => {
+            el.style.opacity = "1";
+            el.style.transform = "none";
+        });
+    }
+</script>
+
+</body>
+</html>
