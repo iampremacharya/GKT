@@ -4,22 +4,10 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1 \
     PORT=10000 \
-    STORAGE_DIR=/data \
-    INSIGHTFACE_ROOT=/data/insightface
+    DATA_DIR=/app/data \
+    STORAGE_DIR=/app/uploads
 
 WORKDIR /app
-
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-       libgl1 \
-       libglib2.0-0 \
-       libgomp1 \
-       libsm6 \
-       libxext6 \
-       libxrender1 \
-       libgfortran5 \
-       curl \
-    && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt ./
 RUN python -m pip install --upgrade pip \
@@ -28,8 +16,8 @@ RUN python -m pip install --upgrade pip \
 COPY . ./
 
 RUN useradd --create-home --uid 10001 appuser \
-    && mkdir -p /data/uploads /data/insightface \
-    && chown -R appuser:appuser /app /data
+    && mkdir -p /app/data /app/uploads \
+    && chown -R appuser:appuser /app
 
 USER appuser
 

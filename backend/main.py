@@ -1,13 +1,14 @@
 from pathlib import Path
 import hashlib
 import io
+import json
+import math
 import os
 import secrets
 import shutil
 import smtplib
 import uuid
 
-import numpy as np
 from PIL import Image, UnidentifiedImageError
 
 from email.message import EmailMessage
@@ -53,7 +54,6 @@ from database import (
     engine
 )
 
-from face_engine import face_engine
 
 from auth import (
     hash_password,
@@ -95,7 +95,7 @@ def _csv_env(name: str, default: str = ""):
     return [item.strip() for item in os.getenv(name, default).split(",") if item.strip()]
 
 
-ALLOWED_ORIGINS = _csv_env("ALLOWED_ORIGINS", "https://gkt.com.np")
+ALLOWED_ORIGINS = _csv_env("ALLOWED_ORIGINS", os.getenv("CORS_ORIGINS", "https://gkt.com.np"))
 if os.getenv("ALLOW_DEV_ORIGINS", "false").lower() == "true":
     ALLOWED_ORIGINS.extend([
         "http://127.0.0.1:5500",
@@ -123,7 +123,7 @@ RESET_TOKEN_MINUTES = 20
 
 FRONTEND_RESET_URL = os.getenv(
     "FRONTEND_RESET_URL",
-    "https://gkt.com.np/twins/"
+    os.getenv("RESET_URL", "https://gkt.com.np/twins/")
 )
 
 DEV_RESET_MODE = (
@@ -208,37 +208,55 @@ def public_user(row, include_email: bool = False):
     return user
 
 
-def cosine_similarity(
-    a,
-    b
-):
-
-    a = np.asarray(
-        a,
-        dtype=np.float32
-    )
-
-    b = np.asarray(
-        b,
-        dtype=np.float32
-    )
-
-    denominator = (
-        np.linalg.norm(a)
-        *
-        np.linalg.norm(b)
-    )
-
-    if denominator == 0:
-
+def cosine_similarity(a, b):
+    if len(a) != len(b) or not a:
         return 0.0
 
-    return float(
-        np.dot(a, b)
-        /
-        denominator
-    )
+    dot = 0.0
+    norm_a = 0.0
+    norm_b = 0.0
 
+    for x, y in zip(a, b):
+        try:
+            x = float(x)
+            y = float(y)
+        except (TypeError, ValueError):
+            return 0.0
+        if not math.isfinite(x) or not math.isfinite(y):
+            return 0.0
+        dot += x * y
+        norm_a += x * x
+        norm_b += y * y
+
+    denominator = math.sqrt(norm_a) * math.sqrt(norm_b)
+    if denominator == 0.0:
+        return 0.0
+    return float(dot / denominator)
+
+
+def parse_embedding(raw_embedding: str):
+    try:
+        embedding = json.loads(raw_embedding)
+    except (TypeError, json.JSONDecodeError):
+        raise HTTPException(status_code=400, detail="Invalid face embedding.")
+
+    if not isinstance(embedding, list) or len(embedding) != 128:
+        raise HTTPException(status_code=400, detail="Invalid face embedding. Please use a supported face photo.")
+
+    cleaned = []
+    for value in embedding:
+        try:
+            number = float(value)
+        except (TypeError, ValueError):
+            raise HTTPException(status_code=400, detail="Invalid face embedding.")
+        if not math.isfinite(number):
+            raise HTTPException(status_code=400, detail="Invalid face embedding.")
+        cleaned.append(number)
+
+    if math.sqrt(sum(value * value for value in cleaned)) == 0.0:
+        raise HTTPException(status_code=400, detail="Invalid face embedding.")
+
+    return cleaned
 
 def normalize_email(
     email: str
@@ -362,6 +380,8 @@ async def register(
     discoverable: bool = Form(True),
 
     consent: bool = Form(...),
+
+    embedding: str = Form(...),
 
     photo: UploadFile = File(...)
 ):
@@ -524,30 +544,7 @@ async def register(
         photo
     )
 
-    try:
-
-        embedding = (
-            face_engine.get_embedding(
-                image_path
-            )
-        )
-
-    except Exception as error:
-
-        try:
-
-            Path(
-                image_path
-            ).unlink()
-
-        except Exception:
-
-            pass
-
-        raise HTTPException(
-            status_code=400,
-            detail=str(error)
-        )
+    embedding = parse_embedding(embedding)
 
     password_hash = hash_password(
         password
@@ -1019,6 +1016,8 @@ async def update_profile(
 
     discoverable: bool = Form(True),
 
+    embedding: str | None = Form(None),
+
     photo: UploadFile | None = File(None),
 
     current_user=Depends(
@@ -1062,30 +1061,14 @@ async def update_profile(
             photo
         )
 
-        try:
-
-            new_embedding = (
-                face_engine.get_embedding(
-                    new_image_path
-                )
-            )
-
-        except Exception as error:
-
+        if not embedding:
             try:
-
-                Path(
-                    new_image_path
-                ).unlink()
-
+                Path(new_image_path).unlink()
             except Exception:
-
                 pass
+            raise HTTPException(status_code=400, detail="A face embedding is required for a new photo.")
 
-            raise HTTPException(
-                status_code=400,
-                detail=str(error)
-            )
+        new_embedding = parse_embedding(embedding)
 
     old_photo = current_user[
         "photo_path"

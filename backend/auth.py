@@ -14,7 +14,7 @@ BASE_DIR = Path(__file__).resolve().parent
 
 # A production deployment must provide a stable secret through the environment.
 # A process-local development secret is generated only when no secret is configured.
-SECRET_KEY = os.getenv("JWT_SECRET_KEY", "").strip()
+SECRET_KEY = (os.getenv("JWT_SECRET_KEY", "").strip() or os.getenv("JWT_SECRET", "").strip())
 if not SECRET_KEY:
     SECRET_KEY = secrets.token_urlsafe(64)
 

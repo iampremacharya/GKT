@@ -236,7 +236,7 @@ def create_user(username, email, password_hash, name, country, photo_path, embed
                 "name": name,
                 "country": country,
                 "photo_path": photo_path,
-                "embedding": json.dumps(embedding.tolist()),
+                "embedding": json.dumps(list(embedding)),
                 "discoverable": 1 if discoverable else 0,
                 "created_at": utc_now_iso(),
             },
@@ -321,7 +321,7 @@ def update_user_profile(user_id, name, country, discoverable, photo_path=None, e
                     "country": country,
                     "discoverable": 1 if discoverable else 0,
                     "photo_path": photo_path,
-                    "embedding": json.dumps(embedding.tolist()),
+                    "embedding": json.dumps(list(embedding)),
                     "id": user_id,
                 },
             )
