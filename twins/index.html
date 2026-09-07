@@ -1,0 +1,5776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>Find Your 7 Twins</title>
+
+<meta
+    name="description"
+    content="Find the seven people around the world who look most like you."
+>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --bg: #07080c;
+    --bg-soft: #0b0d12;
+
+    --panel: rgba(18,20,28,.78);
+    --panel-solid: #12141c;
+    --panel-soft: #181b25;
+
+    --text: #f7f8fc;
+    --muted: #9298aa;
+    --muted-2: #6d7282;
+
+    --line: rgba(255,255,255,.09);
+    --line-strong: rgba(255,255,255,.16);
+
+    --success: #66e3b5;
+    --danger: #ff5c7a;
+    --purple: #9a8cff;
+    --blue: #65c7ff;
+
+    --shadow:
+        0 30px 100px rgba(0,0,0,.45);
+
+    --radius-xl: 34px;
+    --radius-lg: 24px;
+    --radius-md: 16px;
+    --radius-sm: 12px;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+
+    background:
+        radial-gradient(
+            circle at 10% -10%,
+            rgba(120,100,255,.22),
+            transparent 32%
+        ),
+        radial-gradient(
+            circle at 100% 100%,
+            rgba(40,180,255,.12),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 50% 40%,
+            rgba(255,255,255,.025),
+            transparent 35%
+        ),
+        var(--bg);
+
+    color: var(--text);
+
+    font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    overflow-x: hidden;
+}
+
+button,
+input {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+img {
+    display: block;
+}
+
+.hidden {
+    display: none !important;
+}
+
+body::before {
+    content: "";
+
+    position: fixed;
+    inset: 0;
+
+    pointer-events: none;
+
+    background-image:
+        linear-gradient(
+            rgba(255,255,255,.015) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,.015) 1px,
+            transparent 1px
+        );
+
+    background-size: 60px 60px;
+
+    mask-image:
+        linear-gradient(
+            to bottom,
+            black,
+            transparent 75%
+        );
+
+    opacity: .35;
+
+    z-index: -1;
+}
+
+#app {
+    min-height: 100vh;
+}
+
+button {
+    transition:
+        transform .18s ease,
+        background .18s ease,
+        border-color .18s ease,
+        opacity .18s ease,
+        box-shadow .18s ease;
+}
+
+button:active {
+    transform: scale(.97);
+}
+
+button:disabled {
+    cursor: not-allowed;
+}
+
+::selection {
+    background: rgba(154,140,255,.35);
+}
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.loading {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+
+    display: grid;
+    place-items: center;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(100,90,255,.12),
+            transparent 40%
+        ),
+        var(--bg);
+}
+
+.loading-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+}
+
+.loader {
+    width: 46px;
+    height: 46px;
+
+    border: 3px solid rgba(255,255,255,.08);
+    border-top-color: white;
+
+    border-radius: 50%;
+
+    animation: spin .75s linear infinite;
+}
+
+.loading-text {
+    color: var(--muted);
+    font-size: 13px;
+    letter-spacing: .3px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* =========================================================
+   AUTH
+========================================================= */
+
+.auth-page {
+    min-height: 100vh;
+
+    display: grid;
+    place-items: center;
+
+    padding: 30px 20px;
+}
+
+.auth-shell {
+    width: min(460px,100%);
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.logo-mark {
+    position: relative;
+
+    width: 68px;
+    height: 68px;
+
+    margin: 0 auto 18px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 22px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff,
+            #a79cff 55%,
+            #62cfff
+        );
+
+    color: #090a0f;
+
+    font-size: 30px;
+    font-weight: 950;
+
+    box-shadow:
+        0 20px 70px rgba(120,100,255,.30);
+}
+
+.logo-mark::after {
+    content: "";
+
+    position: absolute;
+    inset: -8px;
+
+    border-radius: 28px;
+
+    border: 1px solid rgba(255,255,255,.08);
+
+    pointer-events: none;
+}
+
+.logo h1 {
+    font-size: clamp(27px,6vw,32px);
+    letter-spacing: -1.5px;
+    line-height: 1;
+}
+
+.logo p {
+    color: var(--muted);
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.auth-card {
+    position: relative;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.045),
+            rgba(255,255,255,.015)
+        ),
+        var(--panel);
+
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xl);
+
+    padding: 26px;
+
+    box-shadow: var(--shadow);
+
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+}
+
+.auth-card::before {
+    content: "";
+
+    position: absolute;
+
+    width: 180px;
+    height: 180px;
+
+    top: -100px;
+    right: -100px;
+
+    border-radius: 50%;
+
+    background: rgba(125,105,255,.13);
+
+    filter: blur(40px);
+
+    pointer-events: none;
+}
+
+.auth-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    padding: 4px;
+
+    background: rgba(0,0,0,.3);
+
+    border: 1px solid rgba(255,255,255,.04);
+
+    border-radius: 15px;
+
+    margin-bottom: 24px;
+}
+
+.auth-tabs button {
+    border: 0;
+    background: transparent;
+
+    color: var(--muted);
+
+    padding: 11px;
+
+    border-radius: 11px;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.auth-tabs button.active {
+    background: rgba(255,255,255,.08);
+    color: white;
+
+    box-shadow:
+        0 4px 20px rgba(0,0,0,.15);
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.field label {
+    color: #c8ccd7;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    letter-spacing: .2px;
+}
+
+.field input {
+    width: 100%;
+
+    border: 1px solid var(--line);
+
+    background: rgba(5,6,10,.65);
+
+    color: white;
+
+    padding: 13px 14px;
+
+    border-radius: 13px;
+
+    outline: none;
+
+    transition:
+        border-color .18s ease,
+        box-shadow .18s ease,
+        background .18s ease;
+}
+
+.field input::placeholder {
+    color: #555b6b;
+}
+
+.field input:focus {
+    border-color: rgba(154,140,255,.55);
+
+    background: rgba(8,9,14,.85);
+
+    box-shadow:
+        0 0 0 4px
+        rgba(154,140,255,.08);
+}
+
+input[type="file"] {
+    cursor: pointer;
+}
+
+input[type="file"]::file-selector-button {
+    margin-right: 10px;
+
+    border: 0;
+
+    border-radius: 9px;
+
+    padding: 8px 10px;
+
+    background: rgba(255,255,255,.08);
+
+    color: white;
+
+    cursor: pointer;
+}
+
+.checkbox {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 10px;
+
+    color: var(--muted);
+
+    font-size: 12px;
+    line-height: 1.5;
+
+    cursor: pointer;
+}
+
+.checkbox input {
+    margin-top: 3px;
+    accent-color: #9a8cff;
+}
+
+.primary {
+    width: 100%;
+
+    border: 0;
+
+    border-radius: 14px;
+
+    padding: 14px 16px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff,
+            #d9dcff
+        );
+
+    color: #08090d;
+
+    font-weight: 850;
+
+    margin-top: 4px;
+
+    box-shadow:
+        0 10px 30px
+        rgba(255,255,255,.08);
+}
+
+.primary:hover {
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 14px 35px
+        rgba(255,255,255,.12);
+}
+
+.error {
+    background: rgba(255,92,122,.09);
+
+    border:
+        1px solid
+        rgba(255,92,122,.20);
+
+    color: #ff9bad;
+
+    padding: 11px 13px;
+
+    border-radius: 12px;
+
+    font-size: 12px;
+
+    line-height: 1.45;
+}
+
+.success-message {
+    background: rgba(102,227,181,.08);
+
+    border-color:
+        rgba(102,227,181,.18);
+
+    color: #88edca;
+}
+
+/* =========================================================
+   FORGOT PASSWORD
+========================================================= */
+
+.forgot-button {
+    align-self: flex-end;
+
+    margin-top: -5px;
+
+    border: 0;
+
+    background: transparent;
+
+    color: #a9a1ff;
+
+    font-size: 11px;
+    font-weight: 750;
+
+    padding: 3px 0;
+}
+
+.forgot-button:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+.auth-back {
+    border: 0;
+    background: transparent;
+
+    color: var(--muted);
+
+    font-size: 12px;
+    font-weight: 700;
+
+    padding: 2px 0;
+
+    text-align: left;
+}
+
+.auth-back:hover {
+    color: white;
+}
+
+.recovery-info {
+    display: flex;
+    gap: 11px;
+
+    padding: 13px;
+
+    border-radius: 14px;
+
+    background: rgba(100,120,255,.055);
+
+    border:
+        1px solid
+        rgba(100,120,255,.10);
+
+    color: var(--muted);
+
+    font-size: 11px;
+    line-height: 1.55;
+}
+
+.dev-reset {
+    padding: 13px;
+
+    border-radius: 13px;
+
+    background:
+        rgba(102,227,181,.07);
+
+    border:
+        1px solid
+        rgba(102,227,181,.18);
+
+    font-size: 11px;
+
+    line-height: 1.55;
+
+    word-break: break-word;
+}
+
+.dev-reset strong {
+    color: #88edca;
+}
+
+.dev-reset a {
+    display: block;
+
+    margin-top: 7px;
+
+    color: white;
+
+    text-decoration: none;
+
+    font-weight: 700;
+}
+
+.dev-reset a:hover {
+    text-decoration: underline;
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.app-page {
+    min-height: 100vh;
+}
+
+/* =========================================================
+   TOPBAR
+========================================================= */
+
+.topbar {
+    position: sticky;
+    top: 0;
+
+    z-index: 50;
+
+    min-height: 72px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 0 28px;
+
+    background: rgba(7,8,12,.78);
+
+    border-bottom:
+        1px solid var(--line);
+
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    white-space: nowrap;
+
+    font-size: 15px;
+    font-weight: 900;
+
+    letter-spacing: -.5px;
+}
+
+.brand-badge {
+    width: 28px;
+    height: 28px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 9px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff,
+            #9c91ff
+        );
+
+    color: #08090d;
+
+    font-size: 13px;
+    font-weight: 950;
+}
+
+.brand span {
+    color: var(--muted);
+    font-weight: 500;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.nav button {
+    border: 0;
+
+    background: transparent;
+
+    color: var(--muted);
+
+    padding: 9px 13px;
+
+    border-radius: 11px;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.nav button:hover,
+.nav button.active {
+    color: white;
+    background: rgba(255,255,255,.075);
+}
+
+.logout {
+    color: #ff8098 !important;
+}
+
+.logout:hover {
+    background:
+        rgba(255,92,122,.08) !important;
+}
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.page {
+    width: min(1100px,100%);
+
+    margin: 0 auto;
+
+    padding:
+        48px
+        24px
+        100px;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero {
+    text-align: center;
+
+    margin:
+        0 auto 36px;
+}
+
+.eyebrow {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 7px 11px;
+
+    border:
+        1px solid
+        rgba(154,140,255,.18);
+
+    background:
+        rgba(154,140,255,.07);
+
+    border-radius: 999px;
+
+    color: #bcb4ff;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    letter-spacing: .4px;
+
+    text-transform: uppercase;
+
+    margin-bottom: 17px;
+}
+
+.eyebrow-dot {
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: #9a8cff;
+
+    box-shadow:
+        0 0 12px #9a8cff;
+}
+
+.hero h2 {
+    font-size:
+        clamp(42px,7vw,76px);
+
+    line-height: .91;
+
+    letter-spacing: -4.5px;
+
+    font-weight: 950;
+}
+
+.hero h2 span {
+    color: #9c92ff;
+}
+
+.hero p {
+    max-width: 520px;
+
+    margin: 17px auto 0;
+
+    color: var(--muted);
+
+    font-size: 14px;
+
+    line-height: 1.6;
+}
+
+/* =========================================================
+   DISCOVERY
+========================================================= */
+
+.discovery-layout {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+}
+
+.twin-stage {
+    width: min(450px,100%);
+
+    position: relative;
+}
+
+.twin-card {
+    position: relative;
+
+    overflow: hidden;
+
+    border-radius: 32px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.11);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.05),
+            rgba(255,255,255,.015)
+        ),
+        var(--panel-solid);
+
+    box-shadow:
+        0 35px 100px
+        rgba(0,0,0,.52);
+
+    transform-origin:
+        center bottom;
+
+    animation:
+        cardIn .38s
+        cubic-bezier(.2,.8,.2,1);
+}
+
+@keyframes cardIn {
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(16px)
+            scale(.97);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+.twin-card.swipe-left {
+    animation:
+        swipeLeft .35s ease forwards;
+}
+
+.twin-card.swipe-right {
+    animation:
+        swipeRight .35s ease forwards;
+}
+
+@keyframes swipeLeft {
+    to {
+        opacity: 0;
+
+        transform:
+            translateX(-130%)
+            rotate(-18deg);
+    }
+}
+
+@keyframes swipeRight {
+    to {
+        opacity: 0;
+
+        transform:
+            translateX(130%)
+            rotate(18deg);
+    }
+}
+
+/* =========================================================
+   PHOTO
+========================================================= */
+
+.twin-photo {
+    position: relative;
+
+    width: 100%;
+
+    aspect-ratio: 4 / 5;
+
+    overflow: hidden;
+
+    background: #050609;
+}
+
+.twin-photo::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(0,0,0,.18),
+            transparent 30%,
+            transparent 60%,
+            rgba(0,0,0,.58)
+        );
+
+    pointer-events: none;
+}
+
+.twin-photo img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    transition:
+        transform .7s
+        cubic-bezier(.2,.7,.2,1);
+}
+
+.twin-card:hover
+.twin-photo img {
+    transform: scale(1.025);
+}
+
+.similarity {
+    position: absolute;
+
+    top: 17px;
+    right: 17px;
+
+    z-index: 2;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 9px 12px;
+
+    border-radius: 999px;
+
+    background:
+        rgba(0,0,0,.56);
+
+    border:
+        1px solid
+        rgba(255,255,255,.17);
+
+    color: white;
+
+    font-size: 11px;
+    font-weight: 850;
+
+    backdrop-filter:
+        blur(15px);
+}
+
+.similarity-dot {
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: var(--success);
+
+    box-shadow:
+        0 0 10px
+        rgba(102,227,181,.8);
+}
+
+.twin-number {
+    position: absolute;
+
+    left: 17px;
+    top: 17px;
+
+    z-index: 2;
+
+    padding: 8px 11px;
+
+    border-radius: 999px;
+
+    background:
+        rgba(0,0,0,.48);
+
+    border:
+        1px solid
+        rgba(255,255,255,.13);
+
+    color:
+        rgba(255,255,255,.9);
+
+    font-size: 11px;
+    font-weight: 800;
+
+    backdrop-filter:
+        blur(15px);
+}
+
+/* =========================================================
+   INFO
+========================================================= */
+
+.twin-info {
+    padding: 20px 20px 21px;
+}
+
+.twin-meta {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-end;
+
+    gap: 15px;
+}
+
+.twin-name {
+    font-size: 25px;
+
+    font-weight: 900;
+
+    letter-spacing: -.8px;
+}
+
+.twin-country {
+    margin-top: 4px;
+
+    color: var(--muted);
+
+    font-size: 13px;
+}
+
+.visual-label {
+    color: var(--muted-2);
+
+    font-size: 10px;
+
+    text-transform: uppercase;
+
+    letter-spacing: .7px;
+
+    font-weight: 800;
+
+    text-align: right;
+}
+
+.visual-label strong {
+    display: block;
+
+    color: var(--success);
+
+    margin-top: 3px;
+
+    font-size: 12px;
+}
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.actions {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1.25fr;
+
+    gap: 10px;
+
+    margin-top: 19px;
+}
+
+.action {
+    min-height: 52px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    border-radius: 15px;
+
+    border:
+        1px solid
+        var(--line);
+
+    background:
+        rgba(255,255,255,.045);
+
+    color: white;
+
+    font-size: 14px;
+    font-weight: 850;
+}
+
+.action.pass:hover {
+    border-color:
+        rgba(255,92,122,.4);
+
+    background:
+        rgba(255,92,122,.07);
+
+    color: #ff91a5;
+}
+
+.action.like {
+    background:
+        linear-gradient(
+            135deg,
+            rgba(102,227,181,.13),
+            rgba(102,227,181,.04)
+        );
+
+    border-color:
+        rgba(102,227,181,.18);
+}
+
+.action.like:hover {
+    border-color:
+        rgba(102,227,181,.5);
+
+    background:
+        rgba(102,227,181,.12);
+
+    color: #8df2cd;
+}
+
+.action-icon {
+    font-size: 19px;
+}
+
+.keyboard-hint {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    margin-top: 15px;
+
+    color: var(--muted-2);
+
+    font-size: 10px;
+}
+
+.key {
+    min-width: 22px;
+
+    padding: 3px 6px;
+
+    border-radius: 6px;
+
+    background:
+        rgba(255,255,255,.06);
+
+    border:
+        1px solid
+        rgba(255,255,255,.07);
+
+    color: #9da2b0;
+
+    font-size: 10px;
+
+    text-align: center;
+}
+
+.progress {
+    text-align: center;
+
+    margin-top: 15px;
+
+    color: var(--muted);
+
+    font-size: 11px;
+
+    letter-spacing: .15px;
+}
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.empty {
+    width: 100%;
+
+    text-align: center;
+
+    padding: 65px 25px;
+
+    color: var(--muted);
+}
+
+.empty-icon {
+    width: 56px;
+    height: 56px;
+
+    display: grid;
+
+    place-items: center;
+
+    margin: 0 auto 18px;
+
+    border-radius: 18px;
+
+    background:
+        rgba(255,255,255,.045);
+
+    border:
+        1px solid
+        var(--line);
+
+    color: white;
+
+    font-size: 23px;
+}
+
+.empty h3 {
+    color: white;
+
+    font-size: 20px;
+
+    letter-spacing: -.5px;
+
+    margin-bottom: 8px;
+}
+
+.empty p {
+    max-width: 410px;
+
+    margin: 0 auto;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+}
+
+/* =========================================================
+   SECTION
+========================================================= */
+
+.section-title {
+    margin-bottom: 30px;
+}
+
+.section-title .eyebrow {
+    margin-bottom: 12px;
+}
+
+.section-title h2 {
+    font-size:
+        clamp(34px,6vw,48px);
+
+    letter-spacing: -2.5px;
+
+    line-height: 1;
+}
+
+.section-title p {
+    color: var(--muted);
+
+    margin-top: 9px;
+
+    font-size: 13px;
+}
+
+/* =========================================================
+   MATCHES
+========================================================= */
+
+.match-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fill,
+            minmax(210px,1fr)
+        );
+
+    gap: 16px;
+}
+
+.match-card {
+    position: relative;
+
+    overflow: hidden;
+
+    border:
+        1px solid
+        var(--line);
+
+    border-radius: 22px;
+
+    background:
+        var(--panel);
+
+    box-shadow:
+        0 15px 45px
+        rgba(0,0,0,.22);
+
+    animation:
+        cardIn .35s ease both;
+}
+
+.match-card:hover {
+    border-color:
+        var(--line-strong);
+
+    transform:
+        translateY(-2px);
+}
+
+.match-card::after {
+    content: "TWIN MATCH";
+
+    position: absolute;
+
+    top: 12px;
+    left: 12px;
+
+    padding: 6px 8px;
+
+    border-radius: 999px;
+
+    background:
+        rgba(0,0,0,.58);
+
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+
+    color: #a8f3d7;
+
+    font-size: 8px;
+    font-weight: 900;
+
+    letter-spacing: .6px;
+
+    backdrop-filter:
+        blur(10px);
+}
+
+.match-card img {
+    width: 100%;
+
+    aspect-ratio: 1;
+
+    object-fit: cover;
+
+    transition:
+        transform .5s ease;
+}
+
+.match-card:hover img {
+    transform: scale(1.035);
+}
+
+.match-card-info {
+    padding: 15px 16px 17px;
+}
+
+.match-card-name {
+    font-weight: 850;
+
+    font-size: 17px;
+
+    letter-spacing: -.3px;
+}
+
+.match-card-country {
+    color: var(--muted);
+
+    font-size: 12px;
+
+    margin-top: 4px;
+}
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+.profile-card {
+    width:
+        min(680px,100%);
+
+    margin: 0 auto;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.045),
+            rgba(255,255,255,.015)
+        ),
+        var(--panel);
+
+    border:
+        1px solid
+        var(--line);
+
+    border-radius: 30px;
+
+    padding: 28px;
+
+    box-shadow: var(--shadow);
+
+    backdrop-filter:
+        blur(20px);
+}
+
+.profile-header {
+    display: flex;
+
+    align-items: center;
+
+    gap: 19px;
+
+    margin-bottom: 29px;
+}
+
+.profile-header img {
+    width: 94px;
+    height: 94px;
+
+    flex: 0 0 auto;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+
+    border:
+        2px solid
+        rgba(255,255,255,.14);
+
+    box-shadow:
+        0 10px 35px
+        rgba(0,0,0,.3);
+}
+
+.profile-header h2 {
+    font-size: 26px;
+
+    letter-spacing: -1px;
+}
+
+.profile-header p {
+    color: var(--muted);
+
+    margin-top: 5px;
+
+    font-size: 13px;
+}
+
+.profile-form {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 16px;
+}
+
+.profile-divider {
+    height: 1px;
+
+    background: var(--line);
+
+    margin: 8px 0;
+}
+
+.privacy-note {
+    display: flex;
+
+    gap: 11px;
+
+    padding: 13px;
+
+    border-radius: 14px;
+
+    background:
+        rgba(100,120,255,.055);
+
+    border:
+        1px solid
+        rgba(100,120,255,.10);
+
+    color: var(--muted);
+
+    font-size: 11px;
+
+    line-height: 1.55;
+}
+
+.privacy-note strong {
+    color: #d2d5ff;
+}
+
+.danger {
+    width: 100%;
+
+    margin-top: 25px;
+
+    padding: 12px;
+
+    border-radius: 13px;
+
+    border:
+        1px solid
+        rgba(255,92,122,.2);
+
+    background:
+        rgba(255,92,122,.055);
+
+    color: #ff91a5;
+
+    font-size: 12px;
+
+    font-weight: 750;
+}
+
+.danger:hover {
+    border-color:
+        rgba(255,92,122,.4);
+
+    background:
+        rgba(255,92,122,.09);
+}
+
+/* =========================================================
+   MATCH OVERLAY
+========================================================= */
+
+.match-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 200;
+
+    display: grid;
+
+    place-items: center;
+
+    padding: 22px;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(115,95,255,.20),
+            transparent 40%
+        ),
+        rgba(0,0,0,.78);
+
+    backdrop-filter:
+        blur(20px);
+
+    animation:
+        overlayIn .25s ease;
+}
+
+@keyframes overlayIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.match-box {
+    position: relative;
+
+    width:
+        min(430px,100%);
+
+    text-align: center;
+
+    padding:
+        34px 28px 28px;
+
+    border-radius: 32px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.065),
+            rgba(255,255,255,.02)
+        ),
+        var(--panel-solid);
+
+    border:
+        1px solid
+        rgba(255,255,255,.13);
+
+    box-shadow:
+        0 40px 120px
+        rgba(0,0,0,.65);
+
+    animation:
+        matchPop .42s
+        cubic-bezier(.16,1,.3,1);
+}
+
+@keyframes matchPop {
+    from {
+        opacity: 0;
+
+        transform:
+            scale(.82)
+            translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            scale(1)
+            translateY(0);
+    }
+}
+
+.match-spark {
+    font-size: 34px;
+
+    margin-bottom: 8px;
+}
+
+.match-box h2 {
+    font-size: 42px;
+
+    letter-spacing: -2.5px;
+
+    line-height: 1;
+}
+
+.match-box p {
+    color: var(--muted);
+
+    margin-top: 9px;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+}
+
+.match-photo-wrap {
+    position: relative;
+
+    width: 142px;
+    height: 142px;
+
+    margin: 24px auto 17px;
+}
+
+.match-photo-wrap::before {
+    content: "";
+
+    position: absolute;
+
+    inset: -8px;
+
+    border-radius: 50%;
+
+    border:
+        1px solid
+        rgba(102,227,181,.35);
+
+    box-shadow:
+        0 0 40px
+        rgba(102,227,181,.13);
+}
+
+.match-box img {
+    width: 100%;
+    height: 100%;
+
+    border-radius: 50%;
+
+    object-fit: cover;
+
+    border: 4px solid white;
+
+    box-shadow:
+        0 20px 55px
+        rgba(0,0,0,.45);
+}
+
+.match-box h3 {
+    font-size: 20px;
+
+    letter-spacing: -.5px;
+}
+
+.match-box button {
+    width: 100%;
+
+    margin-top: 23px;
+
+    padding: 14px;
+
+    border: 0;
+
+    border-radius: 14px;
+
+    background: white;
+
+    color: #08090d;
+
+    font-weight: 850;
+}
+
+.match-box button:hover {
+    opacity: .9;
+
+    transform:
+        translateY(-1px);
+}
+
+async function setAuthenticatedImage(element, endpoint) {
+
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (!token || !element) return;
+
+    try {
+        const response = await fetch(
+            API_BASE + endpoint,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+
+        if (!response.ok) return;
+
+        const blob = await response.blob();
+        const objectUrl = URL.createObjectURL(blob);
+        element.src = objectUrl;
+    } catch {
+        // Keep the existing image/placeholder when the authenticated image cannot load.
+    }
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast-container {
+    position: fixed;
+
+    right: 18px;
+    bottom: 18px;
+
+    z-index: 500;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 9px;
+
+    pointer-events: none;
+}
+
+.toast {
+    max-width:
+        min(360px,
+        calc(100vw - 36px));
+
+    padding: 12px 14px;
+
+    border-radius: 13px;
+
+    background:
+        rgba(22,24,32,.92);
+
+    border:
+        1px solid
+        var(--line);
+
+    color: white;
+
+    font-size: 12px;
+
+    box-shadow:
+        0 15px 45px
+        rgba(0,0,0,.4);
+
+    backdrop-filter:
+        blur(18px);
+
+    animation:
+        toastIn .25s ease;
+}
+
+.toast.success {
+    border-color:
+        rgba(102,227,181,.25);
+}
+
+.toast.error {
+    border-color:
+        rgba(255,92,122,.25);
+}
+
+@keyframes toastIn {
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width:700px) {
+
+    .topbar {
+        min-height: 64px;
+
+        padding: 0 14px;
+    }
+
+    .brand span {
+        display: none;
+    }
+
+    .brand {
+        font-size: 13px;
+    }
+
+    .nav {
+        gap: 2px;
+    }
+
+    .nav button {
+        padding: 8px;
+
+        font-size: 10px;
+    }
+
+    .page {
+        padding:
+            32px
+            15px
+            80px;
+    }
+
+    .hero {
+        margin-bottom: 28px;
+    }
+
+    .hero h2 {
+        letter-spacing: -3px;
+    }
+
+    .hero p {
+        font-size: 12px;
+    }
+
+    .twin-card {
+        border-radius: 26px;
+    }
+
+    .profile-card {
+        padding: 22px;
+
+        border-radius: 24px;
+    }
+
+    .match-grid {
+        grid-template-columns:
+            repeat(2,minmax(0,1fr));
+
+        gap: 10px;
+    }
+
+    .match-card {
+        border-radius: 17px;
+    }
+
+    .match-card-info {
+        padding: 12px;
+    }
+
+    .match-card-name {
+        font-size: 14px;
+    }
+
+    .match-card-country {
+        font-size: 10px;
+    }
+}
+
+@media (max-width:430px) {
+
+    .topbar {
+        gap: 8px;
+    }
+
+    .brand-badge {
+        width: 25px;
+        height: 25px;
+
+        border-radius: 8px;
+
+        font-size: 11px;
+    }
+
+    .nav button {
+        padding:
+            7px 6px;
+
+        font-size: 9px;
+    }
+
+    .page {
+        padding-top: 27px;
+    }
+
+    .hero h2 {
+        font-size: 43px;
+
+        letter-spacing: -3px;
+    }
+
+    .twin-info {
+        padding: 17px;
+    }
+
+    .twin-name {
+        font-size: 22px;
+    }
+
+    .action {
+        min-height: 49px;
+
+        font-size: 13px;
+    }
+
+    .keyboard-hint {
+        display: none;
+    }
+
+    .profile-header img {
+        width: 78px;
+        height: 78px;
+    }
+
+    .profile-header h2 {
+        font-size: 22px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="app">
+
+<!-- =======================================================
+     LOADING
+======================================================= -->
+
+<div id="loadingScreen" class="loading">
+
+    <div class="loading-inner">
+
+        <div class="loader"></div>
+
+        <div class="loading-text">
+            Finding your world…
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =======================================================
+     AUTH
+======================================================= -->
+
+<section id="authPage" class="auth-page hidden">
+
+<div class="auth-shell">
+
+<div class="logo">
+
+<div class="logo-mark">
+    7
+</div>
+
+<h1>
+    Find Your 7 Twins
+</h1>
+
+<p>
+    One face. Seven possible worlds.
+</p>
+
+</div>
+
+
+<div class="auth-card">
+
+<div id="authTabs" class="auth-tabs">
+
+<button
+    type="button"
+    id="loginTab"
+    class="active"
+    onclick="showAuth('login')"
+>
+    Login
+</button>
+
+<button
+    type="button"
+    id="registerTab"
+    onclick="showAuth('register')"
+>
+    Create account
+</button>
+
+</div>
+
+
+<!-- =====================================================
+     LOGIN
+====================================================== -->
+
+<form
+    id="loginForm"
+    class="auth-form"
+    onsubmit="login(event)"
+>
+
+<div class="field">
+
+<label>
+    Username
+</label>
+
+<input
+    id="loginUsername"
+    required
+    autocomplete="username"
+    placeholder="your_username"
+>
+
+</div>
+
+
+<div class="field">
+
+<label>
+    Password
+</label>
+
+<input
+    id="loginPassword"
+    type="password"
+    required
+    autocomplete="current-password"
+    placeholder="••••••••"
+>
+
+</div>
+
+
+<button
+    type="button"
+    class="forgot-button"
+    onclick="showAuth('forgot')"
+>
+    Forgot password?
+</button>
+
+
+<div
+    id="loginError"
+    class="error hidden"
+></div>
+
+
+<button
+    type="submit"
+    id="loginButton"
+    class="primary"
+>
+    Enter your world
+</button>
+
+</form>
+
+
+<!-- =====================================================
+     REGISTER
+====================================================== -->
+
+<form
+    id="registerForm"
+    class="auth-form hidden"
+    onsubmit="register(event)"
+>
+
+<div class="field">
+
+<label>
+    Username
+</label>
+
+<input
+    id="registerUsername"
+    required
+    minlength="3"
+    maxlength="30"
+    autocomplete="username"
+    placeholder="prem_acharya"
+>
+
+</div>
+
+
+<div class="field">
+
+<label>
+    Email
+</label>
+
+<input
+    id="registerEmail"
+    type="email"
+    required
+    maxlength="254"
+    autocomplete="email"
+    placeholder="you@example.com"
+>
+
+</div>
+
+
+<div class="field">
+
+<label>
+    Password
+</label>
+
+<input
+    id="registerPassword"
+    type="password"
+    required
+    minlength="8"
+    maxlength="72"
+    autocomplete="new-password"
+    placeholder="At least 8 characters"
+>
+
+</div>
+
+
+<div class="field">
+
+<label>
+    Name
+</label>
+
+<input
+    id="registerName"
+    required
+    maxlength="80"
+    placeholder="Your name"
+>
+
+</div>
+
+
+<div class="field">
+
+<label>
+    Country
+</label>
+
+<input
+    id="registerCountry"
+    required
+    maxlength="80"
+    placeholder="Nepal"
+>
+
+</div>
+
+
+<div class="field">
+
+<label>
+    Face photo
+</label>
+
+<input
+    id="registerPhoto"
+    type="file"
+    accept="image/jpeg,image/png,image/webp"
+    required
+>
+
+</div>
+
+
+<label class="checkbox">
+
+<input
+    id="registerDiscoverable"
+    type="checkbox"
+    checked
+>
+
+<span>
+    Let other people discover me as a twin.
+    You can turn this off later.
+</span>
+
+</label>
+
+
+<label class="checkbox">
+
+<input
+    id="registerConsent"
+    type="checkbox"
+    required
+>
+
+<span>
+    I understand that Find Your 7 Twins compares visual facial similarity.
+    It does not determine genetic relationships, ancestry, identity, or biological twin status.
+</span>
+
+</label>
+
+
+<div class="recovery-info" style="margin-top:8px;">
+
+<div>🔐</div>
+
+<div>
+    Your face photo is processed to generate a visual embedding for matching.
+    You can turn discoverability off and permanently delete your account and uploaded photo later.
+    <a href="./privacy.html" target="_blank" rel="noopener">Read the full privacy notice.</a>
+</div>
+
+</div>
+
+
+<div
+    id="registerError"
+    class="error hidden"
+></div>
+
+
+<button
+    type="submit"
+    id="registerButton"
+    class="primary"
+>
+    Find my 7
+</button>
+
+</form>
+
+
+<!-- =====================================================
+     FORGOT PASSWORD
+====================================================== -->
+
+<form
+    id="forgotForm"
+    class="auth-form hidden"
+    onsubmit="requestPasswordReset(event)"
+>
+
+<button
+    type="button"
+    class="auth-back"
+    onclick="showAuth('login')"
+>
+    ← Back to login
+</button>
+
+
+<div>
+
+<h2
+    style="
+        font-size:24px;
+        letter-spacing:-1px;
+        margin-bottom:7px;
+    "
+>
+    Reset your password
+</h2>
+
+<p
+    style="
+        color:var(--muted);
+        font-size:12px;
+        line-height:1.55;
+    "
+>
+    Enter the username or email connected to
+    your account. We'll help you create a new password.
+</p>
+
+</div>
+
+
+<div class="field">
+
+<label>
+    Username or email
+</label>
+
+<input
+    id="forgotIdentifier"
+    required
+    autocomplete="username"
+    placeholder="your_username or you@example.com"
+>
+
+</div>
+
+
+<div
+    id="forgotError"
+    class="error hidden"
+></div>
+
+
+<div
+    id="forgotSuccess"
+    class="error success-message hidden"
+></div>
+
+
+<div
+    id="devResetBox"
+    class="dev-reset hidden"
+></div>
+
+
+<button
+    type="submit"
+    id="forgotButton"
+    class="primary"
+>
+    Send reset link
+</button>
+
+
+<div class="recovery-info">
+
+<div>
+    🔐
+</div>
+
+<div>
+    Password reset links are temporary and
+    can only be used once.
+</div>
+
+</div>
+
+</form>
+
+
+<!-- =====================================================
+     RESET PASSWORD
+====================================================== -->
+
+<form
+    id="resetForm"
+    class="auth-form hidden"
+>
+
+<div>
+
+<h2
+    style="
+        font-size:24px;
+        letter-spacing:-1px;
+        margin-bottom:7px;
+    "
+>
+    Create a new password
+</h2>
+
+<p
+    style="
+        color:var(--muted);
+        font-size:12px;
+        line-height:1.55;
+    "
+>
+    Choose a new password for your Find Your 7 account.
+</p>
+
+</div>
+
+
+<div class="field">
+
+<label>
+    New password
+</label>
+
+<input
+    id="resetPassword"
+    type="password"
+    required
+    minlength="8"
+    maxlength="72"
+    autocomplete="new-password"
+    placeholder="At least 8 characters"
+>
+
+</div>
+
+
+<div class="field">
+
+<label>
+    Confirm new password
+</label>
+
+<input
+    id="resetPasswordConfirm"
+    type="password"
+    required
+    minlength="8"
+    maxlength="72"
+    autocomplete="new-password"
+    placeholder="Enter it again"
+>
+
+</div>
+
+
+<div
+    id="resetError"
+    class="error hidden"
+></div>
+
+
+<div
+    id="resetSuccess"
+    class="error success-message hidden"
+></div>
+
+
+<button
+    type="submit"
+    id="resetButton"
+    class="primary"
+>
+    Change password
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =======================================================
+     MAIN APPLICATION
+======================================================= -->
+
+<section
+    id="mainPage"
+    class="app-page hidden"
+>
+
+<header class="topbar">
+
+<div class="brand">
+
+<div class="brand-badge">
+    7
+</div>
+
+Find Your 7
+
+<span>
+    Twins
+</span>
+
+</div>
+
+
+<nav class="nav">
+
+<button
+    type="button"
+    id="navDiscover"
+    class="active"
+    onclick="showPage('discover')"
+>
+    Discover
+</button>
+
+<button
+    type="button"
+    id="navMatches"
+    onclick="showPage('matches')"
+>
+    Matches
+</button>
+
+<button
+    type="button"
+    id="navProfile"
+    onclick="showPage('profile')"
+>
+    Profile
+</button>
+
+<button
+    type="button"
+    class="logout"
+    onclick="logout()"
+>
+    Logout
+</button>
+
+</nav>
+
+</header>
+
+
+<!-- =====================================================
+     DISCOVER
+====================================================== -->
+
+<main
+    id="discoverPage"
+    class="page"
+>
+
+<div class="hero">
+
+<div class="eyebrow">
+
+<span class="eyebrow-dot"></span>
+
+Visual twin discovery
+
+</div>
+
+
+<h2>
+
+Find your<br>
+
+<span>
+    seven twins.
+</span>
+
+</h2>
+
+
+<p>
+    Seven people at a time.
+    Seven faces.
+    One surprisingly familiar world.
+</p>
+
+</div>
+
+
+<div class="discovery-layout">
+
+<div class="twin-stage">
+
+<div
+    id="twinCard"
+    class="twin-card hidden"
+>
+
+<div class="twin-photo">
+
+<img
+    id="twinPhoto"
+    alt="Visual twin"
+    loading="eager"
+>
+
+
+<div
+    id="twinNumber"
+    class="twin-number"
+>
+    TWIN 1
+</div>
+
+
+<div
+    id="similarity"
+    class="similarity"
+>
+
+<span class="similarity-dot"></span>
+
+<span>
+    --% visual similarity
+</span>
+
+</div>
+
+</div>
+
+
+<div class="twin-info">
+
+<div class="twin-meta">
+
+<div>
+
+<div
+    id="twinName"
+    class="twin-name"
+></div>
+
+<div
+    id="twinCountry"
+    class="twin-country"
+></div>
+
+</div>
+
+
+<div class="visual-label">
+
+Visual match
+
+<strong>
+    Not a genetic match
+</strong>
+
+</div>
+
+</div>
+
+
+<div class="actions">
+
+<button
+    type="button"
+    class="action pass"
+    onclick="swipeCurrent('pass')"
+>
+<span class="action-icon">×</span>
+Pass
+</button>
+
+
+<button
+    type="button"
+    class="action like"
+    onclick="swipeCurrent('like')"
+>
+<span class="action-icon">♥</span>
+Twin
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div
+    id="discoveryEmpty"
+    class="empty hidden"
+>
+
+<div class="empty-icon">
+    ✦
+</div>
+
+<h3 id="discoveryEmptyTitle">
+    Your seven are waiting.
+</h3>
+
+<p id="discoveryEmptyText">
+    There are no more undiscovered people
+    for you right now. Invite others to join
+    and grow the twin network.
+</p>
+
+</div>
+
+
+<div
+    id="discoveryError"
+    class="empty hidden"
+>
+
+<div class="empty-icon">
+    !
+</div>
+
+<h3>
+    Something went wrong.
+</h3>
+
+<p id="discoveryErrorText">
+    We couldn't load your twins.
+</p>
+
+</div>
+
+
+<div
+    id="progress"
+    class="progress"
+></div>
+
+
+<div
+    id="keyboardHint"
+    class="keyboard-hint"
+>
+
+<span class="key">
+    ←
+</span>
+
+Pass
+
+<span style="margin-left:5px;">
+    ·
+</span>
+
+<span class="key">
+    →
+</span>
+
+Twin
+
+</div>
+
+</div>
+
+</div>
+
+</main>
+
+
+<!-- =====================================================
+     MATCHES
+====================================================== -->
+
+<main
+    id="matchesPage"
+    class="page hidden"
+>
+
+<div class="section-title">
+
+<div class="eyebrow">
+
+<span class="eyebrow-dot"></span>
+
+Mutual recognition
+
+</div>
+
+<h2>
+    Twin Matches
+</h2>
+
+<p>
+    People who also chose you as their twin.
+</p>
+
+</div>
+
+
+<div
+    id="matchesGrid"
+    class="match-grid"
+></div>
+
+</main>
+
+
+<!-- =====================================================
+     PROFILE
+====================================================== -->
+
+<main
+    id="profilePage"
+    class="page hidden"
+>
+
+<div class="section-title">
+
+<div class="eyebrow">
+    Your identity
+</div>
+
+<h2>
+    Profile
+</h2>
+
+<p>
+    Control how the twin network sees you.
+</p>
+
+</div>
+
+
+<div class="profile-card">
+
+<div class="profile-header">
+
+<img
+    id="profilePhoto"
+    alt="Profile"
+>
+
+<div>
+
+<h2 id="profileName">
+    Profile
+</h2>
+
+<p id="profileUsername"></p>
+
+</div>
+
+</div>
+
+
+<form
+    class="profile-form"
+    onsubmit="updateProfile(event)"
+>
+
+<div class="field">
+
+<label>
+    Email
+</label>
+
+<input
+    id="profileEmailInput"
+    type="email"
+    readonly
+>
+
+</div>
+
+
+<div class="field">
+
+<label>
+    Name
+</label>
+
+<input
+    id="profileNameInput"
+    required
+    maxlength="80"
+>
+
+</div>
+
+
+<div class="field">
+
+<label>
+    Country
+</label>
+
+<input
+    id="profileCountryInput"
+    required
+    maxlength="80"
+>
+
+</div>
+
+
+<div class="field">
+
+<label>
+    Change profile photo
+</label>
+
+<input
+    id="profilePhotoInput"
+    type="file"
+    accept="image/jpeg,image/png,image/webp"
+>
+
+</div>
+
+
+<label class="checkbox">
+
+<input
+    id="profileDiscoverable"
+    type="checkbox"
+>
+
+<span>
+    Allow other people to discover me
+    as a visual twin.
+</span>
+
+</label>
+
+
+<div class="privacy-note">
+
+<div>
+    🔒
+</div>
+
+<div>
+
+<strong>
+    Your control matters.
+</strong>
+
+<br>
+
+Your discoverability setting controls
+whether your profile can appear in other
+people's twin results.
+
+</div>
+
+</div>
+
+
+<div
+    id="profileMessage"
+    class="error hidden"
+></div>
+
+
+<button
+    type="submit"
+    id="profileSaveButton"
+    class="primary"
+>
+    Save profile
+</button>
+
+</form>
+
+
+<div class="profile-divider"></div>
+
+
+<button
+    type="button"
+    class="danger"
+    onclick="deleteAccount()"
+>
+    Permanently delete my account
+</button>
+
+</div>
+
+</main>
+
+</section>
+
+
+<!-- =======================================================
+     MATCH OVERLAY
+======================================================= -->
+
+<div
+    id="matchOverlay"
+    class="match-overlay hidden"
+>
+
+<div class="match-box">
+
+<div class="match-spark">
+    ✦
+</div>
+
+<h2>
+    Twin Match!
+</h2>
+
+<p>
+    You both chose each other.
+</p>
+
+
+<div class="match-photo-wrap">
+
+<img
+    id="matchPhoto"
+    alt="Twin Match"
+>
+
+</div>
+
+
+<h3 id="matchName"></h3>
+
+
+<button
+    type="button"
+    onclick="closeMatch()"
+>
+    Continue discovering
+</button>
+
+</div>
+
+</div>
+
+
+<!-- =======================================================
+     TOASTS
+======================================================= -->
+
+<div
+    id="toastContainer"
+    class="toast-container"
+></div>
+
+</div>
+
+
+<script src="./config.js"></script>
+
+<script>
+
+/* =========================================================
+   CONFIG
+========================================================= */
+
+const API_BASE =
+    String(
+        window.TWINS_CONFIG?.API_BASE ||
+        ""
+    ).replace(/\/+$/, "");
+
+const TOKEN_KEY =
+    "find7twins_access_token";
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let currentUser = null;
+
+let twins = [];
+
+let currentTwinIndex = 0;
+
+let isSwiping = false;
+
+let isLoadingTwins = false;
+
+let currentPage = "discover";
+
+let discoveryRequestId = 0;
+
+let resetToken = null;
+
+
+/* =========================================================
+   DOM
+========================================================= */
+
+function $(id) {
+    return document.getElementById(id);
+}
+
+
+/* =========================================================
+   API
+========================================================= */
+
+async function api(
+    endpoint,
+    options = {}
+) {
+
+    const token =
+        localStorage.getItem(
+            TOKEN_KEY
+        );
+
+
+    options.headers = {
+        ...(options.headers || {})
+    };
+
+
+    if (token) {
+
+        options.headers.Authorization =
+            `Bearer ${token}`;
+
+    }
+
+
+    let response;
+
+
+    try {
+
+        response = await fetch(
+            API_BASE + endpoint,
+            options
+        );
+
+    } catch {
+
+        throw new Error(
+            "Unable to connect to the Find Your 7 server."
+        );
+
+    }
+
+
+    let data = {};
+
+
+    try {
+
+        data = await response.json();
+
+    } catch {
+
+        data = {};
+
+    }
+
+
+    if (!response.ok) {
+
+        if (
+            response.status === 401
+            &&
+            token
+        ) {
+
+            localStorage.removeItem(
+                TOKEN_KEY
+            );
+
+            currentUser = null;
+
+            logout(false);
+
+        }
+
+
+        throw new Error(
+            data.detail ||
+            `Request failed with HTTP ${response.status}.`
+        );
+
+    }
+
+
+    return data;
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+function toast(
+    message,
+    type = ""
+) {
+
+    const container =
+        $("toastContainer");
+
+
+    const item =
+        document.createElement(
+            "div"
+        );
+
+
+    item.className =
+        `toast ${type}`;
+
+
+    item.textContent =
+        message;
+
+
+    container.appendChild(
+        item
+    );
+
+
+    setTimeout(() => {
+
+        item.style.opacity =
+            "0";
+
+        item.style.transform =
+            "translateY(8px)";
+
+
+        setTimeout(
+            () => item.remove(),
+            220
+        );
+
+    }, 3000);
+}
+
+
+/* =========================================================
+   AUTH UI
+========================================================= */
+
+function showAuth(mode) {
+
+    const forms = {
+        login: $("loginForm"),
+        register: $("registerForm"),
+        forgot: $("forgotForm"),
+        reset: $("resetForm")
+    };
+
+
+    Object.entries(forms)
+        .forEach(
+            ([name, form]) => {
+
+                form.classList.toggle(
+                    "hidden",
+                    name !== mode
+                );
+
+            }
+        );
+
+
+    $("authTabs")
+        .classList.toggle(
+            "hidden",
+            mode === "forgot"
+            ||
+            mode === "reset"
+        );
+
+
+    $("loginTab")
+        .classList.toggle(
+            "active",
+            mode === "login"
+        );
+
+
+    $("registerTab")
+        .classList.toggle(
+            "active",
+            mode === "register"
+        );
+
+
+    if (mode === "forgot") {
+
+        $("forgotError")
+            .classList
+            .add("hidden");
+
+        $("forgotSuccess")
+            .classList
+            .add("hidden");
+
+        $("devResetBox")
+            .classList
+            .add("hidden");
+
+    }
+
+
+    if (mode === "reset") {
+
+        $("resetError")
+            .classList
+            .add("hidden");
+
+        $("resetSuccess")
+            .classList
+            .add("hidden");
+
+    }
+
+}
+
+
+/* =========================================================
+   REGISTER
+========================================================= */
+
+async function register(event) {
+
+    event.preventDefault();
+
+
+    $("registerError")
+        .classList
+        .add("hidden");
+
+
+    const username =
+        $("registerUsername")
+            .value
+            .trim();
+
+
+    const email =
+        $("registerEmail")
+            .value
+            .trim();
+
+
+    const password =
+        $("registerPassword")
+            .value;
+
+
+    const name =
+        $("registerName")
+            .value
+            .trim();
+
+
+    const country =
+        $("registerCountry")
+            .value
+            .trim();
+
+
+    if (username.length < 3) {
+
+        showError(
+            "registerError",
+            "Username must contain at least 3 characters."
+        );
+
+        return;
+    }
+
+
+    if (username.length > 30) {
+
+        showError(
+            "registerError",
+            "Username must be 30 characters or less."
+        );
+
+        return;
+    }
+
+
+    if (
+        !/^[a-zA-Z0-9_]+$/.test(
+            username
+        )
+    ) {
+
+        showError(
+            "registerError",
+            "Username can contain letters, numbers and underscores only."
+        );
+
+        return;
+    }
+
+
+    if (
+        !email
+        ||
+        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+            email
+        )
+    ) {
+
+        showError(
+            "registerError",
+            "Please enter a valid email address."
+        );
+
+        return;
+    }
+
+
+    if (password.length < 8) {
+
+        showError(
+            "registerError",
+            "Password must contain at least 8 characters."
+        );
+
+        return;
+    }
+
+
+    if (
+        new TextEncoder()
+            .encode(password)
+            .length > 72
+    ) {
+
+        showError(
+            "registerError",
+            "Password must be 72 bytes or fewer."
+        );
+
+        return;
+    }
+
+
+    if (!name) {
+
+        showError(
+            "registerError",
+            "Name is required."
+        );
+
+        return;
+    }
+
+
+    if (!country) {
+
+        showError(
+            "registerError",
+            "Country is required."
+        );
+
+        return;
+    }
+
+
+    if (!$("registerConsent").checked) {
+
+        showError(
+            "registerError",
+            "Please acknowledge the visual-similarity and privacy notice."
+        );
+
+        return;
+    }
+
+
+    const photo =
+        $("registerPhoto")
+            .files[0];
+
+
+    if (!photo) {
+
+        showError(
+            "registerError",
+            "Please select a face photo."
+        );
+
+        return;
+    }
+
+
+    const form =
+        new FormData();
+
+
+    form.append(
+        "username",
+        username
+    );
+
+    form.append(
+        "email",
+        email
+    );
+
+    form.append(
+        "password",
+        password
+    );
+
+    form.append(
+        "name",
+        name
+    );
+
+    form.append(
+        "country",
+        country
+    );
+
+    form.append(
+        "discoverable",
+        $("registerDiscoverable").checked
+    );
+
+    form.append(
+        "consent",
+        $("registerConsent").checked
+    );
+
+    form.append(
+        "photo",
+        photo
+    );
+
+
+    setButtonLoading(
+        $("registerButton"),
+        true,
+        "Creating your world…"
+    );
+
+
+    try {
+
+        const data =
+            await api(
+                "/api/auth/register",
+                {
+                    method: "POST",
+                    body: form
+                }
+            );
+
+
+        localStorage.setItem(
+            TOKEN_KEY,
+            data.access_token
+        );
+
+
+        currentUser =
+            data.user;
+
+
+        enterApp();
+
+
+        toast(
+            "Your twin journey begins.",
+            "success"
+        );
+
+
+    } catch (error) {
+
+        showError(
+            "registerError",
+            error.message
+        );
+
+
+    } finally {
+
+        setButtonLoading(
+            $("registerButton"),
+            false,
+            "Find my 7"
+        );
+
+    }
+}
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+async function login(event) {
+
+    event.preventDefault();
+
+
+    $("loginError")
+        .classList
+        .add("hidden");
+
+
+    setButtonLoading(
+        $("loginButton"),
+        true,
+        "Entering…"
+    );
+
+
+    try {
+
+        const data =
+            await api(
+                "/api/auth/login",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            username:
+                                $("loginUsername")
+                                    .value
+                                    .trim(),
+
+                            password:
+                                $("loginPassword")
+                                    .value
+
+                        })
+                }
+            );
+
+
+        localStorage.setItem(
+            TOKEN_KEY,
+            data.access_token
+        );
+
+
+        currentUser =
+            data.user;
+
+
+        enterApp();
+
+
+    } catch (error) {
+
+        showError(
+            "loginError",
+            error.message
+        );
+
+
+    } finally {
+
+        setButtonLoading(
+            $("loginButton"),
+            false,
+            "Enter your world"
+        );
+
+    }
+}
+
+
+/* =========================================================
+   FORGOT PASSWORD REQUEST
+========================================================= */
+
+async function requestPasswordReset(
+    event
+) {
+
+    event.preventDefault();
+
+
+    $("forgotError")
+        .classList
+        .add("hidden");
+
+    $("forgotSuccess")
+        .classList
+        .add("hidden");
+
+    $("devResetBox")
+        .classList
+        .add("hidden");
+
+
+    const identifier =
+        $("forgotIdentifier")
+            .value
+            .trim();
+
+
+    if (!identifier) {
+
+        showError(
+            "forgotError",
+            "Enter your username or email."
+        );
+
+        return;
+    }
+
+
+    setButtonLoading(
+        $("forgotButton"),
+        true,
+        "Generating reset link…"
+    );
+
+
+    try {
+
+        const data =
+            await api(
+                "/api/auth/forgot-password",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+                            identifier
+                        })
+                }
+            );
+
+
+        $("forgotSuccess")
+            .textContent =
+            data.message ||
+            "If the account exists, a reset link has been generated.";
+
+
+        $("forgotSuccess")
+            .classList
+            .remove("hidden");
+
+
+        if (
+            data.development_reset_url
+        ) {
+
+            const box =
+                $("devResetBox");
+
+
+            box.innerHTML = `
+
+                <strong>
+                    Development reset link
+                </strong>
+
+                <br>
+
+                This is visible because the
+                backend is currently running
+                in development mode.
+
+                <a
+                    href="${escapeAttribute(
+                        data.development_reset_url
+                    )}"
+                >
+                    Open password reset
+                </a>
+
+            `;
+
+
+            box.classList
+                .remove("hidden");
+
+        }
+
+
+    } catch (error) {
+
+        showError(
+            "forgotError",
+            error.message
+        );
+
+
+    } finally {
+
+        setButtonLoading(
+            $("forgotButton"),
+            false,
+            "Send reset link"
+        );
+
+    }
+}
+
+
+/* =========================================================
+   RESET PASSWORD
+========================================================= */
+
+async function resetPassword(event) {
+
+    /*
+     * CRITICAL:
+     * Prevent the browser's native form submission.
+     * This prevents the page from reloading.
+     */
+
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+
+    const errorBox =
+        $("resetError");
+
+    const successBox =
+        $("resetSuccess");
+
+    const button =
+        $("resetButton");
+
+
+    errorBox.classList.add(
+        "hidden"
+    );
+
+    successBox.classList.add(
+        "hidden"
+    );
+
+
+    const password =
+        $("resetPassword")
+            .value;
+
+
+    const confirmation =
+        $("resetPasswordConfirm")
+            .value;
+
+
+    /* -----------------------------------------------------
+       VALIDATION
+    ----------------------------------------------------- */
+
+    if (password.length < 8) {
+
+        showError(
+            "resetError",
+            "Password must contain at least 8 characters."
+        );
+
+        return false;
+    }
+
+
+    if (
+        new TextEncoder()
+            .encode(password)
+            .length > 72
+    ) {
+
+        showError(
+            "resetError",
+            "Password must be 72 bytes or fewer."
+        );
+
+        return false;
+    }
+
+
+    if (
+        password !==
+        confirmation
+    ) {
+
+        showError(
+            "resetError",
+            "The passwords do not match."
+        );
+
+        return false;
+    }
+
+
+    if (!resetToken) {
+
+        showError(
+            "resetError",
+            "This reset link is invalid or missing."
+        );
+
+        return false;
+    }
+
+
+    setButtonLoading(
+        button,
+        true,
+        "Changing password…"
+    );
+
+
+    let resetSucceeded =
+        false;
+
+
+    try {
+
+        console.log(
+            "[Find Your 7] Sending password reset request..."
+        );
+
+
+        const data =
+            await api(
+                "/api/auth/reset-password",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+                            token:
+                                resetToken,
+
+                            password:
+                                password
+                        })
+                }
+            );
+
+
+        console.log(
+            "[Find Your 7] Password reset API response:",
+            data
+        );
+
+
+        /*
+         * SUCCESS
+         */
+
+        resetSucceeded =
+            true;
+
+
+        successBox.textContent =
+            data.message ||
+            "Your password has been changed successfully. You can now log in.";
+
+
+        /*
+         * Show success immediately.
+         */
+
+        successBox.classList.remove(
+            "hidden"
+        );
+
+
+        errorBox.classList.add(
+            "hidden"
+        );
+
+
+        /*
+         * Keep button visibly successful.
+         */
+
+        button.disabled =
+            true;
+
+        button.style.opacity =
+            "1";
+
+        button.textContent =
+            "Password changed ✓";
+
+
+        /*
+         * Clear password fields.
+         */
+
+        $("resetPassword")
+            .value = "";
+
+        $("resetPasswordConfirm")
+            .value = "";
+
+
+        /*
+         * Token has now been consumed
+         * successfully by the backend.
+         */
+
+        resetToken =
+            null;
+
+
+        /*
+         * Remove reset_token from URL.
+         */
+
+        window.history.replaceState(
+            {},
+            document.title,
+            window.location.pathname
+        );
+
+
+        /*
+         * Give user four seconds
+         * to read the success message.
+         */
+
+        setTimeout(
+            () => {
+
+                showAuth(
+                    "login"
+                );
+
+
+                $("loginError")
+                    .classList
+                    .add("hidden");
+
+
+                $("loginPassword")
+                    .value = "";
+
+
+                $("loginUsername")
+                    .focus();
+
+
+                toast(
+                    "Password changed successfully. Log in using your new password.",
+                    "success"
+                );
+
+            },
+            4000
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "[Find Your 7] PASSWORD RESET ERROR:",
+            error
+        );
+
+
+        const message =
+            error &&
+            error.message
+                ? error.message
+                : "The password could not be changed.";
+
+
+        /*
+         * Keep the error permanently visible.
+         */
+
+        errorBox.textContent =
+            "PASSWORD RESET FAILED: " +
+            message;
+
+
+        errorBox.classList.remove(
+            "hidden"
+        );
+
+
+        successBox.classList.add(
+            "hidden"
+        );
+
+
+    } finally {
+
+        if (!resetSucceeded) {
+
+            setButtonLoading(
+                button,
+                false,
+                "Change password"
+            );
+
+        }
+
+    }
+
+
+    /*
+     * Returning false is an additional
+     * protection against native form submission.
+     */
+
+    return false;
+}
+
+
+/* =========================================================
+   EXPLICIT RESET FORM SUBMIT HANDLER
+========================================================= */
+
+/*
+ * This is intentionally attached with JavaScript rather
+ * than relying only on inline HTML onsubmit handling.
+ *
+ * It guarantees that the browser does not perform a
+ * normal form submission/reload.
+ */
+
+$("resetForm").addEventListener(
+    "submit",
+    resetPassword
+);
+
+
+/* =========================================================
+   BUTTON LOADING
+========================================================= */
+
+function setButtonLoading(
+    button,
+    loading,
+    text
+) {
+
+    if (!button) {
+        return;
+    }
+
+
+    if (
+        button.dataset.originalText ===
+        undefined
+    ) {
+
+        button.dataset.originalText =
+            button.textContent.trim();
+
+    }
+
+
+    button.disabled =
+        loading;
+
+
+    button.style.opacity =
+        loading ? ".65" : "1";
+
+
+    button.textContent =
+        loading
+            ? text
+            : button.dataset.originalText;
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+function showError(
+    id,
+    message
+) {
+
+    const element =
+        $(id);
+
+
+    if (!element) {
+        return;
+    }
+
+
+    element.textContent =
+        message;
+
+
+    element.classList
+        .remove("hidden");
+}
+
+
+/* =========================================================
+   BOOT
+========================================================= */
+
+async function boot() {
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+
+    resetToken =
+        params.get(
+            "reset_token"
+        );
+
+
+    if (resetToken) {
+
+        finishBoot();
+
+        showAuth(
+            "reset"
+        );
+
+        return;
+    }
+
+
+    const token =
+        localStorage.getItem(
+            TOKEN_KEY
+        );
+
+
+    if (!token) {
+
+        finishBoot();
+
+        return;
+    }
+
+
+    try {
+
+        currentUser =
+            await api(
+                "/api/me"
+            );
+
+
+        enterApp();
+
+
+    } catch {
+
+        localStorage.removeItem(
+            TOKEN_KEY
+        );
+
+
+        finishBoot();
+
+    }
+}
+
+
+/* =========================================================
+   FINISH BOOT
+========================================================= */
+
+function finishBoot() {
+
+    $("loadingScreen")
+        .classList
+        .add("hidden");
+
+
+    $("authPage")
+        .classList
+        .remove("hidden");
+}
+
+
+/* =========================================================
+   ENTER APP
+========================================================= */
+
+function enterApp() {
+
+    $("loadingScreen")
+        .classList
+        .add("hidden");
+
+
+    $("authPage")
+        .classList
+        .add("hidden");
+
+
+    $("mainPage")
+        .classList
+        .remove("hidden");
+
+
+    showPage(
+        "discover",
+        true
+    );
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+function logout(
+    reload = true
+) {
+
+    localStorage.removeItem(
+        TOKEN_KEY
+    );
+
+
+    currentUser = null;
+
+    twins = [];
+
+    currentTwinIndex = 0;
+
+    isSwiping = false;
+
+    isLoadingTwins = false;
+
+    discoveryRequestId++;
+
+
+    if (reload) {
+
+        $("mainPage")
+            .classList
+            .add("hidden");
+
+
+        $("authPage")
+            .classList
+            .remove("hidden");
+
+
+        showAuth(
+            "login"
+        );
+
+
+        $("loginPassword").value =
+            "";
+
+    }
+}
+
+
+/* =========================================================
+   PAGE NAVIGATION
+========================================================= */
+
+function showPage(
+    page,
+    forceReload = false
+) {
+
+    currentPage =
+        page;
+
+
+    $("discoverPage")
+        .classList
+        .toggle(
+            "hidden",
+            page !== "discover"
+        );
+
+
+    $("matchesPage")
+        .classList
+        .toggle(
+            "hidden",
+            page !== "matches"
+        );
+
+
+    $("profilePage")
+        .classList
+        .toggle(
+            "hidden",
+            page !== "profile"
+        );
+
+
+    $("navDiscover")
+        .classList
+        .toggle(
+            "active",
+            page === "discover"
+        );
+
+
+    $("navMatches")
+        .classList
+        .toggle(
+            "active",
+            page === "matches"
+        );
+
+
+    $("navProfile")
+        .classList
+        .toggle(
+            "active",
+            page === "profile"
+        );
+
+
+    if (
+        page === "discover"
+        &&
+        (
+            forceReload
+            ||
+            twins.length === 0
+        )
+    ) {
+
+        loadTwins();
+
+    }
+
+
+    if (page === "matches") {
+
+        loadMatches();
+
+    }
+
+
+    if (page === "profile") {
+
+        loadProfile();
+
+    }
+}
+
+
+/* =========================================================
+   DISCOVERY UI
+========================================================= */
+
+function resetDiscoveryUI() {
+
+    $("twinCard")
+        .classList
+        .add("hidden");
+
+
+    $("discoveryEmpty")
+        .classList
+        .add("hidden");
+
+
+    $("discoveryError")
+        .classList
+        .add("hidden");
+
+
+    $("keyboardHint")
+        .classList
+        .add("hidden");
+}
+
+
+/* =========================================================
+   LOAD TWINS
+========================================================= */
+
+async function loadTwins(
+    options = {}
+) {
+
+    const {
+        silent = false
+    } = options;
+
+
+    if (
+        isLoadingTwins
+        ||
+        isSwiping
+    ) {
+
+        return;
+    }
+
+
+    isLoadingTwins =
+        true;
+
+
+    const requestId =
+        ++discoveryRequestId;
+
+
+    resetDiscoveryUI();
+
+
+    $("progress")
+        .textContent =
+        silent
+            ? "Finding your next seven…"
+            : "Finding your seven closest twins…";
+
+
+    try {
+
+        const data =
+            await api(
+                "/api/twins/me"
+            );
+
+
+        if (
+            requestId !==
+            discoveryRequestId
+        ) {
+
+            return;
+        }
+
+
+        twins =
+            Array.isArray(
+                data.twins
+            )
+                ? data.twins
+                : [];
+
+
+        currentTwinIndex =
+            0;
+
+
+        if (
+            twins.length === 0
+        ) {
+
+            $("discoveryEmptyTitle")
+                .textContent =
+                "You've explored everyone available.";
+
+
+            $("discoveryEmptyText")
+                .textContent =
+                "There are no more undiscovered people for you right now. Invite others to join and grow the twin network.";
+
+
+            $("discoveryEmpty")
+                .classList
+                .remove("hidden");
+
+
+            $("progress")
+                .textContent =
+                "";
+
+            return;
+        }
+
+
+        $("keyboardHint")
+            .classList
+            .remove("hidden");
+
+
+        showCurrentTwin();
+
+
+    } catch (error) {
+
+        if (
+            requestId !==
+            discoveryRequestId
+        ) {
+
+            return;
+        }
+
+
+        $("discoveryErrorText")
+            .textContent =
+            error.message;
+
+
+        $("discoveryError")
+            .classList
+            .remove("hidden");
+
+
+        $("progress")
+            .textContent =
+            "";
+
+    } finally {
+
+        if (
+            requestId ===
+            discoveryRequestId
+        ) {
+
+            isLoadingTwins =
+                false;
+        }
+    }
+}
+
+
+/* =========================================================
+   SHOW CURRENT TWIN
+========================================================= */
+
+function showCurrentTwin() {
+
+    if (
+        currentTwinIndex >=
+        twins.length
+    ) {
+
+        replenishDiscovery();
+
+        return;
+    }
+
+
+    const twin =
+        twins[
+            currentTwinIndex
+        ];
+
+
+    if (
+        !twin
+        ||
+        !twin.user
+    ) {
+
+        currentTwinIndex++;
+
+        showCurrentTwin();
+
+        return;
+    }
+
+
+    const user =
+        twin.user;
+
+
+    $("twinPhoto").src =
+        API_BASE +
+        user.photo_url;
+
+
+    $("twinPhoto").alt =
+        `${user.name} — visual twin`;
+
+
+    $("twinName").textContent =
+        user.name;
+
+
+    $("twinCountry").textContent =
+        user.country;
+
+
+    $("twinNumber").textContent =
+        `TWIN ${currentTwinIndex + 1}`;
+
+
+    $("similarity").innerHTML = `
+
+        <span class="similarity-dot"></span>
+
+        <span>
+            ${escapeHtml(
+                String(
+                    twin.similarity_percent
+                )
+            )}% visual similarity
+        </span>
+
+    `;
+
+
+    $("progress").textContent =
+        `Twin ${
+            currentTwinIndex + 1
+        } of ${
+            twins.length
+        }`;
+
+
+    $("twinCard")
+        .classList
+        .remove("hidden");
+
+
+    $("twinCard").style.animation =
+        "none";
+
+
+    void $("twinCard")
+        .offsetWidth;
+
+
+    $("twinCard").style.animation =
+        "cardIn .38s cubic-bezier(.2,.8,.2,1)";
+}
+
+
+/* =========================================================
+   REPLENISH
+========================================================= */
+
+async function replenishDiscovery() {
+
+    if (
+        isLoadingTwins
+        ||
+        isSwiping
+    ) {
+
+        return;
+    }
+
+
+    $("twinCard")
+        .classList
+        .add("hidden");
+
+
+    $("keyboardHint")
+        .classList
+        .add("hidden");
+
+
+    $("progress")
+        .textContent =
+        "Finding your next seven…";
+
+
+    await loadTwins({
+        silent: true
+    });
+}
+
+
+/* =========================================================
+   SWIPE
+========================================================= */
+
+async function swipeCurrent(
+    direction
+) {
+
+    if (
+        isSwiping
+        ||
+        isLoadingTwins
+        ||
+        currentTwinIndex >= twins.length
+    ) {
+
+        return;
+    }
+
+
+    const twin =
+        twins[
+            currentTwinIndex
+        ];
+
+
+    if (
+        !twin
+        ||
+        !twin.user
+    ) {
+
+        return;
+    }
+
+
+    const targetId =
+        twin.user.id;
+
+
+    isSwiping =
+        true;
+
+
+    const card =
+        $("twinCard");
+
+
+    const originalIndex =
+        currentTwinIndex;
+
+
+    const actionButtons =
+        card.querySelectorAll(
+            ".action"
+        );
+
+
+    actionButtons.forEach(
+        button => {
+            button.disabled = true;
+        }
+    );
+
+
+    card.classList.remove(
+        "swipe-left",
+        "swipe-right"
+    );
+
+
+    void card.offsetWidth;
+
+
+    card.classList.add(
+        direction === "like"
+            ? "swipe-right"
+            : "swipe-left"
+    );
+
+
+    try {
+
+        const form =
+            new FormData();
+
+
+        form.append(
+            "target_user_id",
+            targetId
+        );
+
+
+        form.append(
+            "direction",
+            direction
+        );
+
+
+        const result =
+            await api(
+                "/api/swipes",
+                {
+                    method: "POST",
+                    body: form
+                }
+            );
+
+
+        twins.splice(
+            originalIndex,
+            1
+        );
+
+
+        if (
+            currentTwinIndex >=
+            twins.length
+        ) {
+
+            currentTwinIndex =
+                twins.length - 1;
+        }
+
+
+        if (result.match) {
+
+            showMatch(
+                result.target
+            );
+        }
+
+
+        setTimeout(
+            async () => {
+
+                card.classList.remove(
+                    "swipe-left",
+                    "swipe-right"
+                );
+
+
+                actionButtons.forEach(
+                    button => {
+                        button.disabled =
+                            false;
+                    }
+                );
+
+
+                isSwiping =
+                    false;
+
+
+                if (
+                    twins.length > 0
+                    &&
+                    currentTwinIndex <
+                        twins.length
+                ) {
+
+                    showCurrentTwin();
+
+                    return;
+                }
+
+
+                await replenishDiscovery();
+
+            },
+            260
+        );
+
+
+    } catch (error) {
+
+        card.classList.remove(
+            "swipe-left",
+            "swipe-right"
+        );
+
+
+        actionButtons.forEach(
+            button => {
+                button.disabled =
+                    false;
+            }
+        );
+
+
+        isSwiping =
+            false;
+
+
+        if (
+            error.message.includes(
+                "already made"
+            )
+        ) {
+
+            twins.splice(
+                originalIndex,
+                1
+            );
+
+
+            currentTwinIndex =
+                Math.min(
+                    originalIndex,
+                    twins.length
+                );
+
+
+            toast(
+                "That Twin decision was already saved. Refreshing your discovery.",
+                "error"
+            );
+
+
+            if (
+                twins.length > 0
+                &&
+                currentTwinIndex <
+                    twins.length
+            ) {
+
+                showCurrentTwin();
+
+            } else {
+
+                replenishDiscovery();
+
+            }
+
+
+            return;
+        }
+
+
+        toast(
+            error.message,
+            "error"
+        );
+    }
+}
+
+
+/* =========================================================
+   MATCH
+========================================================= */
+
+function showMatch(
+    user
+) {
+
+    if (!user) {
+        return;
+    }
+
+
+    $("matchPhoto").src =
+        API_BASE +
+        user.photo_url;
+
+
+    $("matchPhoto").alt =
+        `${user.name} Twin Match`;
+
+
+    $("matchName").textContent =
+        user.name;
+
+
+    $("matchOverlay")
+        .classList
+        .remove("hidden");
+}
+
+
+function closeMatch() {
+
+    $("matchOverlay")
+        .classList
+        .add("hidden");
+}
+
+
+/* =========================================================
+   MATCHES
+========================================================= */
+
+async function loadMatches() {
+
+    const grid =
+        $("matchesGrid");
+
+
+    grid.innerHTML = `
+
+        <div class="empty">
+
+            <div
+                class="loader"
+                style="
+                    margin:0 auto 18px;
+                    width:32px;
+                    height:32px;
+                "
+            ></div>
+
+            <p>
+                Loading your Twin Matches…
+            </p>
+
+        </div>
+
+    `;
+
+
+    try {
+
+        const data =
+            await api(
+                "/api/matches/me"
+            );
+
+
+        if (
+            !data.matches
+            ||
+            data.matches.length === 0
+        ) {
+
+            grid.innerHTML = `
+
+                <div class="empty">
+
+                    <div class="empty-icon">
+                        ♥
+                    </div>
+
+                    <h3>
+                        No Twin Matches yet.
+                    </h3>
+
+                    <p>
+                        Keep exploring your seven.
+                        A Twin Match happens when
+                        you both choose each other.
+                    </p>
+
+                </div>
+
+            `;
+
+
+            return;
+        }
+
+
+        grid.innerHTML =
+            data.matches
+                .map(
+                    (user,index) => `
+
+                        <article
+                            class="match-card"
+                            style="
+                                animation-delay:
+                                ${index * 40}ms
+                            "
+                        >
+
+                            <img
+                                src="${API_BASE}${user.photo_url}"
+                                alt="${escapeHtml(user.name)}"
+                                loading="lazy"
+                            >
+
+                            <div
+                                class="match-card-info"
+                            >
+
+                                <div
+                                    class="match-card-name"
+                                >
+                                    ${escapeHtml(
+                                        user.name
+                                    )}
+                                </div>
+
+                                <div
+                                    class="match-card-country"
+                                >
+                                    ${escapeHtml(
+                                        user.country
+                                    )}
+                                </div>
+
+                            </div>
+
+                        </article>
+
+                    `
+                )
+                .join("");
+
+
+    } catch (error) {
+
+        grid.innerHTML = `
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    !
+                </div>
+
+                <h3>
+                    Couldn't load matches.
+                </h3>
+
+                <p>
+                    ${escapeHtml(
+                        error.message
+                    )}
+                </p>
+
+            </div>
+
+        `;
+    }
+}
+
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+function loadProfile() {
+
+    if (!currentUser) {
+        return;
+    }
+
+
+    setAuthenticatedImage(
+        $("profilePhoto"),
+        "/api/me/photo"
+    );
+
+
+    $("profileName").textContent =
+        currentUser.name;
+
+
+    $("profileUsername").textContent =
+        `@${currentUser.username}`;
+
+
+    $("profileEmailInput").value =
+        currentUser.email ||
+        "No recovery email registered";
+
+
+    $("profileNameInput").value =
+        currentUser.name;
+
+
+    $("profileCountryInput").value =
+        currentUser.country;
+
+
+    $("profileDiscoverable").checked =
+        currentUser.discoverable;
+}
+
+
+/* =========================================================
+   UPDATE PROFILE
+========================================================= */
+
+async function updateProfile(
+    event
+) {
+
+    event.preventDefault();
+
+
+    $("profileMessage")
+        .classList
+        .add("hidden");
+
+
+    const name =
+        $("profileNameInput")
+            .value
+            .trim();
+
+
+    const country =
+        $("profileCountryInput")
+            .value
+            .trim();
+
+
+    if (!name || !country) {
+
+        showProfileMessage(
+            "Name and country are required.",
+            false
+        );
+
+        return;
+    }
+
+
+    const form =
+        new FormData();
+
+
+    form.append(
+        "name",
+        name
+    );
+
+
+    form.append(
+        "country",
+        country
+    );
+
+
+    form.append(
+        "discoverable",
+        $("profileDiscoverable")
+            .checked
+    );
+
+
+    const photo =
+        $("profilePhotoInput")
+            .files[0];
+
+
+    if (photo) {
+
+        form.append(
+            "photo",
+            photo
+        );
+    }
+
+
+    setButtonLoading(
+        $("profileSaveButton"),
+        true,
+        "Saving…"
+    );
+
+
+    try {
+
+        const data =
+            await api(
+                "/api/me",
+                {
+                    method: "PUT",
+                    body: form
+                }
+            );
+
+
+        currentUser =
+            data.user;
+
+
+        loadProfile();
+
+
+        $("profilePhotoInput")
+            .value = "";
+
+
+        showProfileMessage(
+            "Profile updated successfully.",
+            true
+        );
+
+
+        toast(
+            "Profile updated.",
+            "success"
+        );
+
+
+    } catch (error) {
+
+        showProfileMessage(
+            error.message,
+            false
+        );
+
+
+    } finally {
+
+        setButtonLoading(
+            $("profileSaveButton"),
+            false,
+            "Save profile"
+        );
+    }
+}
+
+
+/* =========================================================
+   PROFILE MESSAGE
+========================================================= */
+
+function showProfileMessage(
+    message,
+    success = false
+) {
+
+    const element =
+        $("profileMessage");
+
+
+    element.textContent =
+        message;
+
+
+    element.classList
+        .remove("hidden");
+
+
+    element.classList.toggle(
+        "success-message",
+        success
+    );
+}
+
+
+/* =========================================================
+   DELETE
+========================================================= */
+
+async function deleteAccount() {
+
+    const confirmed =
+        confirm(
+            "Delete your account permanently?\n\n" +
+            "Your profile, Twin Matches and swipes " +
+            "will be removed."
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    try {
+
+        await api(
+            "/api/me",
+            {
+                method: "DELETE"
+            }
+        );
+
+
+        toast(
+            "Account deleted.",
+            "success"
+        );
+
+
+        setTimeout(
+            () => logout(),
+            500
+        );
+
+
+    } catch (error) {
+
+        toast(
+            error.message,
+            "error"
+        );
+    }
+}
+
+
+/* =========================================================
+   HTML ESCAPING
+========================================================= */
+
+function escapeHtml(
+    value
+) {
+
+    return String(value)
+
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
+
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
+
+        .replaceAll(
+            "'",
+            "&#039;"
+        );
+}
+
+
+function escapeAttribute(
+    value
+) {
+
+    return escapeHtml(value);
+}
+
+
+/* =========================================================
+   KEYBOARD
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            currentPage !==
+            "discover"
+        ) {
+
+            return;
+        }
+
+
+        if (
+            $("matchOverlay")
+                .classList
+                .contains("hidden")
+            === false
+        ) {
+
+            if (
+                event.key ===
+                "Escape"
+            ) {
+
+                closeMatch();
+            }
+
+            return;
+        }
+
+
+        if (
+            event.key ===
+            "ArrowLeft"
+        ) {
+
+            event.preventDefault();
+
+            swipeCurrent(
+                "pass"
+            );
+        }
+
+
+        if (
+            event.key ===
+            "ArrowRight"
+        ) {
+
+            event.preventDefault();
+
+            swipeCurrent(
+                "like"
+            );
+        }
+    }
+);
+
+
+/* =========================================================
+   PHOTO VALIDATION
+========================================================= */
+
+function validateImageInput(
+    event,
+    errorId
+) {
+
+    const file =
+        event.target.files[0];
+
+
+    if (!file) {
+        return;
+    }
+
+
+    const allowed = [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+    ];
+
+
+    if (
+        !allowed.includes(
+            file.type
+        )
+    ) {
+
+        showError(
+            errorId,
+            "Please select a JPG, PNG or WEBP image."
+        );
+
+
+        event.target.value =
+            "";
+    }
+}
+
+
+$("registerPhoto")
+    .addEventListener(
+        "change",
+        event => {
+
+            validateImageInput(
+                event,
+                "registerError"
+            );
+
+        }
+    );
+
+
+$("profilePhotoInput")
+    .addEventListener(
+        "change",
+        event => {
+
+            const file =
+                event.target.files[0];
+
+
+            if (!file) {
+                return;
+            }
+
+
+            const allowed = [
+                "image/jpeg",
+                "image/png",
+                "image/webp"
+            ];
+
+
+            if (
+                !allowed.includes(
+                    file.type
+                )
+            ) {
+
+                showProfileMessage(
+                    "Please select a JPG, PNG or WEBP image.",
+                    false
+                );
+
+
+                event.target.value =
+                    "";
+            }
+        }
+    );
+
+
+/* =========================================================
+   START
+========================================================= */
+
+boot();
+
+</script>
+
+</body>
+</html>
