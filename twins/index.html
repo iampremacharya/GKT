@@ -1788,30 +1788,7 @@ input[type="file"]::file-selector-button {
         translateY(-1px);
 }
 
-async function setAuthenticatedImage(element, endpoint) {
 
-    const token = localStorage.getItem(TOKEN_KEY);
-    if (!token || !element) return;
-
-    try {
-        const response = await fetch(
-            API_BASE + endpoint,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            }
-        );
-
-        if (!response.ok) return;
-
-        const blob = await response.blob();
-        const objectUrl = URL.createObjectURL(blob);
-        element.src = objectUrl;
-    } catch {
-        // Keep the existing image/placeholder when the authenticated image cannot load.
-    }
-}
 
 
 /* =========================================================
@@ -3262,7 +3239,59 @@ let resetToken = null;
 function $(id) {
     return document.getElementById(id);
 }
+/* =========================================================
+   AUTHENTICATED IMAGE
+========================================================= */
 
+async function setAuthenticatedImage(element, endpoint) {
+
+    const token =
+        localStorage.getItem(TOKEN_KEY);
+
+    if (!token || !element) {
+        return;
+    }
+
+    try {
+
+        const response =
+            await fetch(
+                API_BASE + endpoint,
+                {
+                    headers: {
+                        Authorization:
+                            `Bearer ${token}`
+                    }
+                }
+            );
+
+        if (!response.ok) {
+            return;
+        }
+
+        const blob =
+            await response.blob();
+
+        const objectUrl =
+            URL.createObjectURL(blob);
+
+        const previousUrl =
+            element.dataset.objectUrl;
+
+        if (previousUrl) {
+            URL.revokeObjectURL(previousUrl);
+        }
+
+        element.dataset.objectUrl =
+            objectUrl;
+
+        element.src =
+            objectUrl;
+
+    } catch {
+        // Keep existing image if loading fails.
+    }
+}
 
 /* =========================================================
    API
