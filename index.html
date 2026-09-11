@@ -3,105 +3,204 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Roast My Bio — GKT Lab 001. Your bio says more than you think.">
+
   <title>ROAST MY BIO — GKT LAB 001</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-  <div class="grain"></div>
 
-  <header class="nav">
-    <a class="brand" href="#">GKT<span>/LAB</span></a>
-    <div class="nav-meta">
-      <span>LAB 001</span>
-      <span class="status"><i></i> ONLINE</span>
+<body>
+
+  <div class="noise"></div>
+
+  <header class="topbar">
+    <div class="brand">GKT / LAB 001</div>
+    <div class="status">
+      <span></span>
+      EXPERIMENTAL DIGITAL PRODUCT
     </div>
   </header>
 
+
   <main>
+
     <section class="hero">
-      <div class="eyebrow">GKT — EXPERIMENTAL DIGITAL PRODUCTS</div>
-      <h1>ROAST<br><em>MY BIO.</em></h1>
-      <p class="lede">Your bio says more than you think.<br>Paste it. We'll tell you what it <strong>actually</strong> says.</p>
 
-      <div class="workbench">
-        <div class="field-head">
-          <span>INPUT / BIO</span>
-          <span id="counter">0 / 500</span>
-        </div>
-        <textarea id="bio" maxlength="500" placeholder="Paste your Instagram, LinkedIn, dating, portfolio, or painfully mysterious bio..."></textarea>
-
-        <div class="controls">
-          <div class="types" role="group" aria-label="Bio type">
-            <button class="type active" data-type="Instagram">Instagram</button>
-            <button class="type" data-type="LinkedIn">LinkedIn</button>
-            <button class="type" data-type="Dating">Dating</button>
-            <button class="type" data-type="Portfolio">Portfolio</button>
-            <button class="type" data-type="Other">Other</button>
-          </div>
-          <button id="roastBtn" class="roast-btn">
-            <span>ROAST IT</span><b>↗</b>
-          </button>
-        </div>
+      <div class="eyebrow">
+        LAB 001 / BIO ANALYSIS ENGINE
       </div>
 
-      <div class="notice" id="notice"></div>
-      <p class="micro">AI-powered. No account. No permanent bio storage.</p>
+      <h1>
+        ROAST
+        <em>MY BIO.</em>
+      </h1>
+
+      <p class="intro">
+        Your bio says more than you think.
+        Paste it. We'll tell you what it
+        <strong>actually</strong> says.
+      </p>
+
     </section>
+
+
+    <section class="lab">
+
+      <div class="input-head">
+        <span>INPUT / BIO</span>
+        <span id="counter">0 / 500</span>
+      </div>
+
+      <textarea
+        id="bio"
+        maxlength="500"
+        placeholder="Paste your bio here..."
+        spellcheck="false"
+      ></textarea>
+
+
+      <div class="types">
+
+        <button class="type active" data-type="Instagram">
+          Instagram
+        </button>
+
+        <button class="type" data-type="LinkedIn">
+          LinkedIn
+        </button>
+
+        <button class="type" data-type="Dating">
+          Dating
+        </button>
+
+        <button class="type" data-type="Portfolio">
+          Portfolio
+        </button>
+
+        <button class="type" data-type="Other">
+          Other
+        </button>
+
+      </div>
+
+
+      <button id="roastBtn" class="roast-btn">
+        <span>ROAST IT</span>
+        <b>↗</b>
+      </button>
+
+      <div id="notice"></div>
+
+      <div class="privacy">
+        LOCAL ENGINE · NO ACCOUNT · NOTHING UPLOADED
+      </div>
+
+    </section>
+
 
     <section id="result" class="result hidden">
-      <div class="result-top">
+
+      <div class="result-head">
+
         <div>
-          <div class="eyebrow">ANALYSIS COMPLETE</div>
-          <h2>HERE'S THE DAMAGE.</h2>
+          <div class="eyebrow">
+            ANALYSIS COMPLETE
+          </div>
+
+          <h2>
+            HERE'S THE DAMAGE.
+          </h2>
         </div>
-        <div class="score-wrap">
-          <span>DAMAGE</span>
-          <strong id="score">0.0</strong><small>/10</small>
+
+        <div class="score-box">
+          <small>DAMAGE</small>
+          <strong>
+            <span id="score">0.0</span>
+            <i>/10</i>
+          </strong>
         </div>
+
       </div>
 
-      <div class="cards">
-        <article class="card roast-card">
-          <span class="label">01 / THE ROAST</span>
+
+      <div class="analysis">
+
+        <article>
+          <span>01 / THE ROAST</span>
           <p id="roast"></p>
         </article>
-        <article class="card translation-card">
-          <span class="label">02 / TRANSLATION</span>
+
+        <article>
+          <span>02 / TRANSLATION</span>
           <p id="translation"></p>
         </article>
-        <article class="card redemption-card">
-          <span class="label">03 / REDEMPTION</span>
+
+        <article>
+          <span>03 / REDEMPTION</span>
           <p id="redemption"></p>
         </article>
+
       </div>
 
-      <div class="share-card" id="shareCard">
-        <div class="share-brand">GKT / LAB 001</div>
-        <div class="share-title">ROAST<br>MY BIO</div>
-        <div class="share-line"></div>
-        <div class="share-label">DAMAGE</div>
-        <div class="share-score"><span id="shareScore">0.0</span><small>/10</small></div>
-        <p id="shareRoast"></p>
-        <div class="share-footer">YOUR BIO SAID MORE THAN YOU THOUGHT.</div>
+
+      <div id="shareCard" class="share-card">
+
+        <div class="share-top">
+          <span>GKT / LAB 001</span>
+          <span>ROAST MY BIO</span>
+        </div>
+
+        <div class="share-damage">
+          <small>DAMAGE</small>
+
+          <strong>
+            <span id="shareScore">0.0</span>/10
+          </strong>
+        </div>
+
+        <p id="shareRoast">
+        </p>
+
+        <div class="share-footer">
+          YOUR BIO SAID MORE THAN YOU THOUGHT.
+        </div>
+
       </div>
+
 
       <div class="actions">
-        <button id="downloadBtn" class="action primary">DOWNLOAD CARD ↗</button>
-        <button id="copyBtn" class="action">COPY RESULT</button>
-        <button id="againBtn" class="action">ROAST ANOTHER</button>
+
+        <button id="downloadBtn">
+          DOWNLOAD CARD ↗
+        </button>
+
+        <button id="copyBtn">
+          COPY RESULT
+        </button>
+
+        <button id="againBtn">
+          ROAST ANOTHER
+        </button>
+
       </div>
+
     </section>
+
   </main>
 
+
   <footer>
+
     <span>GKT — THE FUTURE IS ENGINEERED.</span>
-    <span>LAB 001 / 2026</span>
+
+    <span>
+      LAB 001 / 2026
+    </span>
+
   </footer>
 
+
   <script src="app.js"></script>
+
 </body>
 </html>
