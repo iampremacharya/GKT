@@ -480,3 +480,11 @@ footer {
     gap: 12px;
   }
 }
+/* Precision roast result layer */
+.analysis article strong { display:block; font-size:clamp(1.4rem,3vw,2.5rem); line-height:1; margin-top:.65rem; text-transform:uppercase; }
+.analysis article small { display:block; margin-top:.55rem; opacity:.55; letter-spacing:.12em; }
+.target-card, .reply-card, .fingerprint-card { border-color: rgba(255,70,70,.45); }
+.reply-card p { font-size:clamp(1.15rem,2.4vw,1.8rem); font-weight:700; }
+.fingerprint-card strong { font-size:.82rem !important; letter-spacing:.14em; opacity:.72; }
+#roast { font-size:clamp(1.5rem,3.5vw,2.8rem); line-height:1.05; font-weight:800; letter-spacing:-.035em; }
+#shareRoast { font-size:clamp(1.25rem,3vw,2.2rem); line-height:1.05; font-weight:800; }

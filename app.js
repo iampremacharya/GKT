@@ -1,675 +1,321 @@
-const bio = document.getElementById("bio");
-const counter = document.getElementById("counter");
-const roastBtn = document.getElementById("roastBtn");
-const result = document.getElementById("result");
-const notice = document.getElementById("notice");
-
-let selectedType = "Instagram";
-
-
-/* -----------------------------
-   TYPE SELECTOR
------------------------------ */
-
-document.querySelectorAll(".type").forEach((button) => {
-
-  button.addEventListener("click", () => {
-
-    document.querySelectorAll(".type").forEach((b) => {
-      b.classList.remove("active");
-    });
-
-    button.classList.add("active");
-
-    selectedType = button.dataset.type;
-  });
-
-});
-
-
-/* -----------------------------
-   CHARACTER COUNTER
------------------------------ */
-
-bio.addEventListener("input", () => {
-
-  counter.textContent =
-    `${bio.value.length} / 500`;
-
-});
-
-
-/* -----------------------------
-   UTILITIES
------------------------------ */
-
-function hash(text) {
-
-  let h = 2166136261;
-
-  for (let i = 0; i < text.length; i++) {
-
-    h ^= text.charCodeAt(i);
-
-    h +=
-      (h << 1) +
-      (h << 4) +
-      (h << 7) +
-      (h << 8) +
-      (h << 24);
-
-  }
-
-  return Math.abs(h >>> 0);
-}
-
-
-function choose(array, seed) {
-
-  return array[
-    seed % array.length
-  ];
-
-}
-
-
-function clamp(value, min, max) {
-
-  return Math.max(
-    min,
-    Math.min(max, value)
-  );
-
-}
-
-
-function capitalize(text) {
-
-  return text.charAt(0).toUpperCase() +
-    text.slice(1);
-
-}
-
-
-/* -----------------------------
-   LOCAL ROAST ENGINE
------------------------------ */
-
-function analyzeBio(text, type) {
-
-  const lower = text.toLowerCase();
-
-  const seed =
-    hash(`${type}|${text}`);
-
-
-  let score =
-    2.5 +
-    (seed % 61) / 10;
-
-
-  let roast;
-
-
-  const observations = [];
-
-
-  /* ---- detect common bio crimes ---- */
-
-  if (
-    lower.includes("coffee") ||
-    lower.includes("chai")
-  ) {
-
-    observations.push(
-      choose([
-        "You have officially outsourced your personality to caffeine.",
-        "Coffee is doing a suspicious amount of work in this bio.",
-        "Congratulations. You have joined the international union of people who drink coffee."
-      ], seed)
-    );
-
-    score += .5;
-  }
-
-
-  if (
-    lower.includes("dream") ||
-    lower.includes("hustle") ||
-    lower.includes("grind") ||
-    lower.includes("success")
-  ) {
-
-    observations.push(
-      choose([
-        "There is enough hustle in here to qualify as a LinkedIn post.",
-        "The motivational-poster department called. They want their vocabulary back.",
-        "This bio has been through at least three motivational podcasts."
-      ], seed + 3)
-    );
-
-    score += .7;
-  }
-
-
-  if (
-    lower.includes("entrepreneur") ||
-    lower.includes("founder") ||
-    lower.includes("ceo")
-  ) {
-
-    observations.push(
-      choose([
-        "Calling yourself a founder before founding anything is certainly a strategy.",
-        "The CEO title arrived significantly earlier than the company.",
-        "Your bio has more executive energy than actual evidence."
-      ], seed + 5)
-    );
-
-    score += .8;
-  }
-
-
-  if (
-    lower.includes("love") &&
-    (
-      lower.includes("travel") ||
-      lower.includes("adventure")
-    )
-  ) {
-
-    observations.push(
-      choose([
-        "You have successfully assembled the default human starter pack.",
-        "Travel, love and adventure. Somewhere a Pinterest board is smiling.",
-        "This reads like the demo version of a personality."
-      ], seed + 7)
-    );
-
-    score += .5;
-  }
-
-
-  if (
-    lower.includes("student") ||
-    lower.includes("engineer") ||
-    lower.includes("developer") ||
-    lower.includes("designer")
-  ) {
-
-    observations.push(
-      choose([
-        "Your profession is carrying approximately 74% of this bio.",
-        "A job title entered the chat and never left.",
-        "Technically a bio. Spiritually a résumé fragment."
-      ], seed + 11)
-    );
-
-    score += .4;
-  }
-
-
-  if (
-    text.includes("🔥") ||
-    text.includes("✨") ||
-    text.includes("💯") ||
-    text.includes("🚀")
-  ) {
-
-    observations.push(
-      choose([
-        "The emojis are currently doing unpaid emotional labour.",
-        "The emoji budget clearly exceeded the writing budget.",
-        "At least the emojis are confident."
-      ], seed + 13)
-    );
-
-    score += .5;
-  }
-
-
-  if (
-    lower.includes("not here to") ||
-    lower.includes("don't take") ||
-    lower.includes("dont take")
-  ) {
-
-    observations.push(
-      choose([
-        "Nothing says confidence like beginning with a defensive disclaimer.",
-        "Your bio is already arguing with an imaginary comment section.",
-        "The disclaimer somehow became the personality."
-      ], seed + 17)
-    );
-
-    score += .6;
-  }
-
-
-  if (text.length < 25) {
-
-    observations.push(
-      choose([
-        "You gave us fewer words than a Wi-Fi password.",
-        "Bold choice. Minimalism or simply nothing to say?",
-        "This bio has the information density of an empty folder."
-      ], seed + 19)
-    );
-
-    score += .8;
-
-  } else if (text.length > 350) {
-
-    observations.push(
-      choose([
-        "This stopped being a bio somewhere around paragraph three.",
-        "Your bio has entered its extended director's cut.",
-        "Nobody asked for the autobiography, but here we are."
-      ], seed + 23)
-    );
-
-    score += .8;
-  }
-
-
-  if (
-    (text.match(/[!]/g) || []).length >= 4
-  ) {
-
-    observations.push(
-      choose([
-        "The exclamation marks are fighting for their lives.",
-        "Apparently every sentence needed its own emergency siren.",
-        "Your punctuation has more enthusiasm than your actual bio."
-      ], seed + 29)
-    );
-
-    score += .4;
-  }
-
-
-  /* ---- platform-specific observations ---- */
-
-  if (type === "LinkedIn") {
-
-    observations.push(
-      choose([
-        "This is one 'passionate visionary' away from becoming a LinkedIn carousel.",
-        "Somewhere a recruiter just whispered: 'strong communication skills.'",
-        "The corporate energy is measurable from orbit."
-      ], seed + 31)
-    );
-
-    score += .4;
-  }
-
-
-  if (type === "Dating") {
-
-    observations.push(
-      choose([
-        "You are trying very hard to seem effortless. The effort is showing.",
-        "This sounds like someone who rehearsed being spontaneous.",
-        "The bio says 'I'm chill' with the intensity of a hostage negotiator."
-      ], seed + 37)
-    );
-
-    score += .5;
-  }
-
-
-  if (type === "Instagram") {
-
-    observations.push(
-      choose([
-        "This bio is one carefully placed emoji away from becoming a brand strategy.",
-        "Instagram has seen this exact sentence approximately four million times.",
-        "The algorithm has probably met this personality already."
-      ], seed + 41)
-    );
-
-  }
-
-
-  if (type === "Portfolio") {
-
-    observations.push(
-      choose([
-        "Your portfolio bio is trying to be a résumé wearing sunglasses.",
-        "There is talent here. The bio just buried it under professional vocabulary.",
-        "You probably have better work than this introduction suggests."
-      ], seed + 43)
-    );
-
-  }
-
-
-  /* ---- generic fallback ---- */
-
-  if (observations.length === 0) {
-
-    observations.push(
-      choose([
-        "This bio is surprisingly normal. Which is almost suspicious.",
-        "Nothing catastrophic here. Just enough personality to avoid an investigation.",
-        "You escaped the obvious clichés. Unfortunately, I still have standards.",
-        "There is potential here. The bio just hasn't unlocked it yet."
-      ], seed + 47)
-    );
-
-  }
-
-
-  roast =
-    observations
-      .slice(0, 3)
-      .join(" ");
-
-
-  score =
-    clamp(
-      score,
-      1.8,
-      9.7
-    );
-
-
-  /* -----------------------------
-     TRANSLATION
-  ----------------------------- */
-
-  let translation;
-
-  if (text.length < 35) {
-
-    translation =
-      "You are communicating the bare minimum and trusting everyone else to fill in the blanks.";
-
-  } else if (
-    lower.includes("hustle") ||
-    lower.includes("grind") ||
-    lower.includes("success")
-  ) {
-
-    translation =
-      "You want people to see ambition first, personality second.";
-
-  } else if (
-    lower.includes("travel") ||
-    lower.includes("adventure")
-  ) {
-
-    translation =
-      "You want to come across as spontaneous, interesting and slightly difficult to pin down.";
-
-  } else if (
-    lower.includes("engineer") ||
-    lower.includes("developer") ||
-    lower.includes("designer")
-  ) {
-
-    translation =
-      "You are leading with what you do instead of giving people a reason to remember who you are.";
-
-  } else {
-
-    translation =
-      "You are trying to compress an entire personality into a few lines, and the compression algorithm is struggling.";
-  }
-
-
-  /* -----------------------------
-     REDEMPTION
-  ----------------------------- */
-
-  let redemption;
-
-
-  if (type === "LinkedIn") {
-
-    redemption =
-      "Build around what you actually make, solve or care about. Replace generic ambition with one concrete thing that makes you memorable.";
-
-  } else if (type === "Dating") {
-
-    redemption =
-      "Drop the résumé language. Keep one real detail, one weird detail and one thing someone could actually start a conversation about.";
-
-  } else if (type === "Portfolio") {
-
-    redemption =
-      "Show the person behind the work. One specific interest or obsession will usually make a stronger introduction than five professional adjectives.";
-
-  } else {
-
-    redemption =
-      "Keep the strongest idea, delete the clichés, and replace one generic claim with something oddly specific to you.";
-  }
-
-
-  return {
-    score,
-    roast,
-    translation,
-    redemption
+const bio = document.getElementById('bio');
+const counter = document.getElementById('counter');
+const roastBtn = document.getElementById('roastBtn');
+const result = document.getElementById('result');
+const notice = document.getElementById('notice');
+let selectedType = 'Instagram';
+let lastResult = null;
+
+document.querySelectorAll('.type').forEach(btn => btn.addEventListener('click', () => {
+  document.querySelectorAll('.type').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedType = btn.dataset.type;
+}));
+
+bio.addEventListener('input', () => { counter.textContent = `${bio.value.length} / 500`; });
+
+const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
+const norm = s => s.toLowerCase().replace(/[’']/g, "'").replace(/\s+/g, ' ').trim();
+const has = (s, words) => words.some(w => s.includes(w));
+const count = (s, re) => (s.match(re) || []).length;
+const pick = (arr, seed) => arr[Math.abs(seed) % arr.length];
+const hash = s => { let h = 2166136261; for (let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);} return h>>>0; };
+
+function extract(text, type) {
+  const s = norm(text);
+  const tokens = s.split(/[^a-z0-9@+#&.-]+/).filter(Boolean);
+  const emojis = (text.match(/[\u{1F300}-\u{1FAFF}]/gu) || []);
+  const claims = {
+    founder: has(s,['founder','co-founder','ceo','entrepreneur','startup','building']),
+    hustle: has(s,['hustle','grind','grinding','success','winning','millionaire','ambitious','discipline']),
+    creative: has(s,['designer','artist','creative','photographer','writer','creator','filmmaker','music','musician']),
+    tech: has(s,['developer','engineer','coder','programmer','tech','ai','software','data']),
+    student: has(s,['student','undergrad','bachelor','master','university','college']),
+    travel: has(s,['travel','traveler','traveller','adventure','wanderlust','explore','nomad']),
+    fitness: has(s,['gym','fitness','fit','workout','lifting','runner','running','athlete']),
+    coffee: has(s,['coffee','chai','caffeine','espresso']),
+    luxury: has(s,['luxury','rich','wealth','money','cars','rolex','designer','premium']),
+    relationship: has(s,['love','lover','taken','single','wife','husband','boyfriend','girlfriend','soulmate']),
+    spirituality: has(s,['god','blessed','faith','spiritual','karma','manifest','universe']),
+    motivational: has(s,['dream','dreams','believe','positive','mindset','goals','level up','never give up','be yourself']),
+    status: has(s,['official','public figure','influencer','celeb','celebrity','verified']),
+    disclaimer: has(s,["don't judge","dont judge","not here to","no drama","don't care","dont care","haters","haters gonna"]),
+    dm: has(s,['dm','dms','collab','collaboration','business inquiries','contact me']),
+    location: /\b(in|from|based in|living in)\s+[a-z][a-z .'-]{2,30}/i.test(text),
+    pronoun: /\b(i|i'm|im|my|me|we|our)\b/i.test(text),
   };
-
+  const symbols = count(text, /[|•·]/g);
+  const exclam = count(text, /!/g);
+  const emojisN = emojis.length;
+  const clicheCount = [claims.hustle, claims.motivational, claims.travel, claims.coffee, claims.spirituality, claims.fitness].filter(Boolean).length;
+  const selfBrand = count(s, /\b(i am|i'm|im|my|official|ceo|founder|expert|professional|visionary|leader|creator)\b/g);
+  const vague = count(s, /\b(the future|making history|changing the world|living my best life|good vibes|big things|watch this space|born to|made to|on a mission)\b/g);
+  const compact = text.length < 55;
+  const overloaded = text.length > 260 || symbols >= 5;
+  return {s,tokens,emojis,claims,symbols,exclam,emojisN,clicheCount,selfBrand,vague,compact,overloaded,type,seed:hash(type+'|'+text)};
 }
 
-
-/* -----------------------------
-   RENDER
------------------------------ */
-
-function renderResult(data) {
-
-  document.getElementById("score").textContent =
-    data.score.toFixed(1);
-
-  document.getElementById("shareScore").textContent =
-    data.score.toFixed(1);
-
-  document.getElementById("roast").textContent =
-    data.roast;
-
-  document.getElementById("translation").textContent =
-    data.translation;
-
-  document.getElementById("redemption").textContent =
-    data.redemption;
-
-  document.getElementById("shareRoast").textContent =
-    data.roast;
-
-
-  result.classList.remove("hidden");
-
-  result.scrollIntoView({
-    behavior: "smooth",
-    block: "start"
-  });
-
+function targetProfile(x) {
+  const c=x.claims;
+  const candidates=[];
+  const add=(key, weight, label, evidence, line)=>candidates.push({key,score:weight,label,evidence,line});
+  if(c.founder) add('title',8+(c.hustle?3:0), 'the title', 'founder/CEO language', 'You put the job title in the bio like the company was supposed to arrive with it.');
+  if(c.motivational && c.hustle) add('motivation',9+(x.vague*2), 'the motivational fog', 'hustle + motivational language', 'Your bio is less a personality and more a screensaver for people who discovered podcasts yesterday.');
+  if(c.travel && c.coffee) add('starterpack',9, 'the starter pack', 'travel + coffee', 'You assembled the personality starter pack so perfectly it looks factory-installed.');
+  if(c.travel && c.motivational) add('escape',8, 'the curated freedom', 'travel + motivational language', 'You describe freedom like it is a brand partnership, not a personality.');
+  if(c.tech && c.student) add('resume',9, 'the résumé in disguise', 'student + technical title', 'This is a résumé fragment pretending it got invited to Instagram.');
+  if(c.creative && c.creator) add('creator',8, 'creator branding', 'creative/creator language', 'You are branding the fact that you create things harder than you are showing what you create.');
+  if(c.fitness && c.motivational) add('gym',9, 'gym philosophy', 'fitness + motivation', 'Your personality has been replaced by a protein tub with a quote printed on it.');
+  if(c.luxury && c.status) add('status',10, 'status signaling', 'luxury + status language', 'You are not flexing a lifestyle; you are submitting evidence that you desperately want one noticed.');
+  if(c.disclaimer) add('defensive',10, 'the defensive disclaimer', 'defensive bio language', 'The funniest thing here is that your bio is already defending you from criticism nobody had written yet.');
+  if(c.dm && (c.founder||c.status||c.creator)) add('pitch',8, 'the sales pitch', 'DM/collab language', 'You turned a bio into a lead-generation form and still forgot to give anyone a reason to care.');
+  if(x.emojisN>=4) add('emoji',7+x.emojisN, 'the emoji scaffolding', `${x.emojisN} emojis`, 'The emojis are carrying so much personality they deserve co-author credit.');
+  if(x.vague>=1) add('vague',9+x.vague, 'the empty promise', 'generic future/mission language', 'You promised the future so vaguely even the future has no idea what you are talking about.');
+  if(x.compact && x.selfBrand>=2) add('compressed',9, 'compressed ego', 'short bio with stacked self-labels', 'Six words, three titles, zero evidence. Efficient, if the goal was to advertise the ego.');
+  if(x.overloaded) add('overload',8, 'the information dump', 'overstuffed bio', 'You did not write a bio; you emptied the entire Notes app into the profile field.');
+  if(x.exclam>=3) add('energy',7, 'manufactured enthusiasm', `${x.exclam} exclamation marks`, 'Your punctuation is screaming because the bio itself is not convincing anyone.');
+  if(c.spirituality && c.motivational) add('manifest',8, 'manifestation', 'spiritual + motivational language', 'You manifested so many good vibes you forgot to include a single concrete personality trait.');
+  if(!candidates.length) add('generic',5, 'the missing angle', 'no dominant pattern', 'There is nothing obviously embarrassing here, which means the only thing left to roast is how aggressively normal you made yourself sound.');
+  return candidates.sort((a,b)=>b.score-a.score)[0];
 }
 
+function precision(x,t) {
+  const c=x.claims;
+  const options=[];
+  if(t.key==='title') options.push(
+    'The title is doing the heavy lifting; the bio never cashes the credibility check.',
+    'You introduced the position before introducing a reason anyone should believe it.',
+    'The title sounds established. The rest of the bio sounds like it is waiting for the company to become real.'
+  );
+  if(t.key==='motivation') options.push(
+    'Every phrase announces ambition; almost none gives evidence of it.',
+    'You are selling the image of discipline instead of revealing anything uniquely you.',
+    'The bio keeps saying “future” because the present apparently had nothing quotable.'
+  );
+  if(t.key==='starterpack') options.push(
+    'Coffee + travel is not a personality anymore; it is the default character preset.',
+    'Nothing here is wrong. That is exactly the problem: it is painfully interchangeable.',
+    'You chose two of the internet’s safest personality traits and called it identity.'
+  );
+  if(t.key==='resume') options.push(
+    'Your strongest descriptors are credentials, not character.',
+    'A recruiter could parse this. A stranger could not remember it.',
+    'You told people what you study and do, but not what makes you you.'
+  );
+  if(t.key==='defensive') options.push(
+    'You are fighting an imaginary audience before anyone has even met you.',
+    'The disclaimer reveals insecurity more clearly than the rest of the bio reveals confidence.',
+    'Nothing says “unbothered” like pre-writing the argument with your haters.'
+  );
+  if(t.key==='pitch') options.push(
+    'You made yourself sound available for business before making yourself interesting.',
+    'The call-to-action arrived before the personality.',
+    'You are asking for opportunities without giving the reader a memorable reason to offer one.'
+  );
+  if(t.key==='emoji') options.push(
+    'The symbols are not decorating the personality; they are substituting for it.',
+    'Remove the emojis and watch half the confidence disappear.',
+    'The visual noise is louder than the actual identity.'
+  );
+  if(t.key==='vague') options.push(
+    'The claims are huge and the details are microscopic.',
+    'You keep describing what you will become because what you are is harder to market.',
+    'It sounds ambitious until you ask the one question the bio avoids: “doing what, exactly?”'
+  );
+  if(t.key==='overload') options.push(
+    'You are terrified that one personality trait will not be enough, so you brought twelve.',
+    'The bio is trying to win the reader before the reader has finished the first line.',
+    'More information made you less identifiable.'
+  );
+  if(t.key==='energy') options.push(
+    'The punctuation is compensating for a lack of a sharp idea.',
+    'You cannot manufacture charisma with punctuation.',
+    'The exclamation marks are doing motivational speaking for you.'
+  );
+  if(t.key==='manifest') options.push(
+    'You described the universe’s responsibilities in detail and your own in vibes.',
+    'There is plenty of belief here and almost no evidence.',
+    'The bio is spiritually confident and factually unemployed.'
+  );
+  if(t.key==='generic') options.push(
+    'Nothing sticks because nothing risks being specific.',
+    'You successfully avoided cringe by also avoiding identity.',
+    'The bio is clean. So clean there is nothing to remember.'
+  );
+  return pick(options.length?options:['The bio gave away the target; the engine simply noticed it.'], x.seed>>4);
+}
 
-/* -----------------------------
-   ROAST BUTTON
------------------------------ */
-
-roastBtn.addEventListener("click", () => {
-
-  const text =
-    bio.value.trim();
-
-
-  if (!text) {
-
-    notice.textContent =
-      "YOU FORGOT THE BIO. WE NEED SOMETHING TO JUDGE.";
-
-    bio.focus();
-
-    return;
+function killShot(x,t) {
+  const c=x.claims;
+  const type=x.type;
+  const variants=[];
+  if(t.key==='title') {
+    variants.push(
+      c.hustle ? 'You have more leadership vocabulary than leadership evidence.' : 'The title arrived before the personality did.',
+      type==='LinkedIn' ? 'Your bio has the confidence of a Fortune 500 CEO and the evidence of a Canva template.' : 'You put “CEO” in the bio like the letters themselves were supposed to generate revenue.',
+      'Your title is doing cardio trying to outrun the lack of a story.'
+    );
+  } else if(t.key==='motivation') {
+    variants.push(
+      'Your bio reads like a motivational quote got a LinkedIn account and never learned when to stop talking.',
+      'You are not mysterious; you are just aggressively generic with better punctuation.',
+      'You spent the whole bio proving you want success and forgot to mention what you are actually successful at.'
+    );
+  } else if(t.key==='starterpack') {
+    variants.push(
+      'Coffee, travel, adventure — congratulations on selecting the internet’s default personality preset.',
+      'If “coffee + travel” is the personality, the Wi-Fi password has more character.',
+      'You built a personality out of things everyone likes because apparently originality was on layover.'
+    );
+  } else if(t.key==='resume') {
+    variants.push(
+      'You wrote a résumé, removed the dates, and somehow thought Instagram would call it a personality.',
+      'Your bio can explain what you do perfectly; shame it cannot explain why anyone should remember you.',
+      'You have credentials. What you forgot to bring was a personality.'
+    );
+  } else if(t.key==='defensive') {
+    variants.push(
+      '“I don’t care what people think” is doing a suspicious amount of work for someone who wrote a bio about it.',
+      'You built a pre-emptive defense against criticism and accidentally published the insecurity instead.',
+      'The bio is not confident; it is confidence with a lawyer present.'
+    );
+  } else if(t.key==='pitch') {
+    variants.push(
+      'You turned your personality into a sales funnel and somehow still have no product.',
+      'The bio says “DM for opportunities” before giving anyone an opportunity to care.',
+      'You are networking so hard the personality has been placed on hold.'
+    );
+  } else if(t.key==='emoji') {
+    variants.push(
+      'Take away the emojis and your personality loses signal.',
+      'Your emojis have a stronger personal brand than you do.',
+      'This bio needs fewer emojis and one actual thought.'
+    );
+  } else if(t.key==='vague') {
+    variants.push(
+      'You wrote “changing the world” because “figuring out my own Tuesday” did not sound visionary enough.',
+      'Your ambitions are IMAX; your actual details are a blank screen.',
+      'You keep promising the future because the present apparently has no receipts.'
+    );
+  } else if(t.key==='overload') {
+    variants.push(
+      'You packed so much identity into one bio that somehow none of it survived.',
+      'This is not a bio; it is a panic attack with bullet points.',
+      'You are trying to be memorable by being everything, which is exactly why nothing sticks.'
+    );
+  } else if(t.key==='energy') {
+    variants.push(
+      'The exclamation marks are more convincing than the claims, and that is a terrible sign.',
+      'You used punctuation to fake charisma. The punctuation is exhausted.',
+      'Your bio is yelling because apparently the content did not have enough authority.'
+    );
+  } else if(t.key==='manifest') {
+    variants.push(
+      'You outsourced the entire five-year plan to the universe and called it a personality.',
+      'You have absolute faith in destiny and suspiciously little detail about what you actually do.',
+      'The universe has been tagged in your career plan more times than your own skill set.'
+    );
+  } else {
+    variants.push(
+      'You managed to make a bio so safe it has the personality of a terms-and-conditions checkbox.',
+      'Nothing here is offensive, impressive, or memorable. That is almost an achievement.',
+      'Your bio did not embarrass you; it simply forgot to introduce you.'
+    );
   }
+  // Platform-specific sharpening without turning the result into a paragraph.
+  if(type==='Dating' && (c.relationship || c.travel || c.fitness)) variants.push(
+    'You are not looking for someone special; you are looking for an audience for your personal-brand trailer.'
+  );
+  if(type==='LinkedIn' && (c.hustle || c.founder || c.motivational)) variants.push(
+    'This bio has three promotions, two podcasts and zero measurable outcomes.'
+  );
+  if(type==='Portfolio' && (c.creative || c.tech)) variants.push(
+    'The portfolio is supposed to prove the work. The bio is busy auditioning for it.'
+  );
+  return pick(variants, x.seed);
+}
 
+function reply(x,t,roast) {
+  const r=[
+    '“That sounded better in your head, didn’t it?”',
+    '“Respectfully, your bio needs a bio.”',
+    '“You had 500 characters and still chose a personality template.”',
+    '“The confidence is impressive. The evidence is still buffering.”',
+    '“I read the bio. The bio read like it was written by committee.”'
+  ];
+  if(x.claims.founder) r.push('“Founder of what? The gap between the title and the proof?”');
+  if(x.claims.hustle && x.claims.motivational) r.push('“Your bio is one podcast away from becoming a personality.”');
+  if(x.claims.travel && x.claims.coffee) r.push('“Ah yes, coffee and travel. The two things nobody else on Earth has discovered.”');
+  if(x.claims.disclaimer) r.push('“Nobody attacked you. Why did you arrive with a rebuttal?”');
+  return pick(r, x.seed>>7);
+}
 
-  notice.textContent = "";
+function redemption(x,t) {
+  if(t.key==='title'||t.key==='resume') return 'Delete one title. Add one concrete thing you have actually built, solved, or obsessed over.';
+  if(t.key==='motivation'||t.key==='vague') return 'Kill the slogans. Keep one specific fact nobody else could copy.';
+  if(t.key==='starterpack') return 'Replace the universal interests with one weirdly specific preference.';
+  if(t.key==='emoji'||t.key==='energy') return 'Use the space for a sentence that has meaning instead of volume.';
+  if(t.key==='defensive') return 'Remove the disclaimer. Confidence does not need to pre-argue with strangers.';
+  if(t.key==='pitch') return 'Lead with identity and proof; ask for the opportunity after you have earned curiosity.';
+  if(t.key==='overload') return 'Choose one identity. Make it sharp. Let the rest live somewhere else.';
+  return 'Be specific enough that another person could recognize you without seeing your username.';
+}
 
-  roastBtn.disabled = true;
+function analyzeBio(text,type){
+  const x=extract(text,type);
+  const target=targetProfile(x);
+  const roast=killShot(x,target);
+  const score=clamp(4.0 + target.score*0.45 + x.clicheCount*0.25 + x.vague*0.35 + (x.overloaded?0.5:0) + (x.exclam>=3?0.25:0) - (target.key==='generic'?1.0:0), 2.1, 9.9);
+  const fingerprint=[];
+  if(x.claims.founder) fingerprint.push('TITLE');
+  if(x.claims.motivational||x.claims.hustle) fingerprint.push('HUSTLE');
+  if(x.claims.travel) fingerprint.push('TRAVEL');
+  if(x.claims.coffee) fingerprint.push('CAFFEINE');
+  if(x.claims.tech||x.claims.creative) fingerprint.push('CRAFT');
+  if(x.claims.fitness) fingerprint.push('FITNESS');
+  if(x.claims.disclaimer) fingerprint.push('DEFENSIVE');
+  if(x.claims.dm) fingerprint.push('PITCH');
+  if(!fingerprint.length) fingerprint.push('UNCLASSIFIED');
+  return {score,roast,translation:precision(x,target),reply:reply(x,target,roast),redemption:redemption(x,target),target:target.label,evidence:target.evidence,fingerprint:fingerprint.slice(0,4),type};
+}
 
-  roastBtn.querySelector("span").textContent =
-    "ANALYSING...";
+function renderResult(d){
+  lastResult=d;
+  document.getElementById('score').textContent=d.score.toFixed(1);
+  document.getElementById('shareScore').textContent=d.score.toFixed(1);
+  document.getElementById('roast').textContent=d.roast;
+  document.getElementById('translation').textContent=d.translation;
+  document.getElementById('reply').textContent=d.reply;
+  document.getElementById('redemption').textContent=d.redemption;
+  document.getElementById('shareRoast').textContent=d.roast;
+  document.getElementById('target').textContent=d.target.toUpperCase();
+  document.getElementById('evidence').textContent=d.evidence.toUpperCase();
+  document.getElementById('fingerprint').textContent=d.fingerprint.join(' / ');
+  document.getElementById('shareType').textContent=d.type.toUpperCase();
+  result.classList.remove('hidden');
+  result.scrollIntoView({behavior:'smooth',block:'start'});
+}
 
-
-  setTimeout(() => {
-
-    const resultData =
-      analyzeBio(
-        text,
-        selectedType
-      );
-
-    renderResult(resultData);
-
-    roastBtn.disabled = false;
-
-    roastBtn.querySelector("span").textContent =
-      "ROAST IT";
-
-  }, 650);
-
+roastBtn.addEventListener('click',()=>{
+  const text=bio.value.trim();
+  if(!text){notice.textContent='GIVE ME THE BIO. I CANNOT OPERATE ON VIBES ALONE.';bio.focus();return;}
+  notice.textContent=''; roastBtn.disabled=true; roastBtn.querySelector('span').textContent='CUTTING...';
+  setTimeout(()=>{renderResult(analyzeBio(text,selectedType));roastBtn.disabled=false;roastBtn.querySelector('span').textContent='ROAST IT';},520);
 });
 
+document.getElementById('againBtn').addEventListener('click',()=>{
+  result.classList.add('hidden'); bio.value=''; counter.textContent='0 / 500'; notice.textContent=''; window.scrollTo({top:0,behavior:'smooth'}); bio.focus();
+});
 
-/* -----------------------------
-   ROAST ANOTHER
------------------------------ */
+document.getElementById('copyBtn').addEventListener('click',async()=>{
+  if(!lastResult)return;
+  const d=lastResult;
+  const text=`ROAST MY BIO — ${d.score.toFixed(1)}/10 DAMAGE\n\n${d.roast}\n\nTHE CUT: ${d.translation}\n\nREPLY: ${d.reply}`;
+  try{await navigator.clipboard.writeText(text);const b=document.getElementById('copyBtn');const old=b.textContent;b.textContent='COPIED ✓';setTimeout(()=>b.textContent=old,1500);}catch{alert(text);}
+});
 
-document.getElementById("againBtn")
-  .addEventListener("click", () => {
-
-    result.classList.add("hidden");
-
-    bio.value = "";
-
-    counter.textContent =
-      "0 / 500";
-
-    notice.textContent = "";
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-
-    bio.focus();
-
-  });
-
-
-/* -----------------------------
-   COPY
------------------------------ */
-
-document.getElementById("copyBtn")
-  .addEventListener("click", async () => {
-
-    const score =
-      document.getElementById("score").textContent;
-
-    const roast =
-      document.getElementById("roast").textContent;
-
-    const translation =
-      document.getElementById("translation").textContent;
-
-    const redemption =
-      document.getElementById("redemption").textContent;
-
-
-    const text = `
-ROAST MY BIO — ${score}/10 DAMAGE
-
-${roast}
-
-WHAT IT ACTUALLY SAYS:
-${translation}
-
-REDEMPTION:
-${redemption}
-`.trim();
-
-
-    try {
-
-      await navigator.clipboard.writeText(text);
-
-      const button =
-        document.getElementById("copyBtn");
-
-      const old =
-        button.textContent;
-
-      button.textContent =
-        "COPIED ✓";
-
-      setTimeout(() => {
-        button.textContent = old;
-      }, 1500);
-
-    } catch {
-
-      alert(text);
-
-    }
-
-  });
-
-
-/* -----------------------------
-   DOWNLOAD CARD
------------------------------ */
-
-document.getElementById("downloadBtn")
-  .addEventListener("click", async () => {
-
-    if (!window.html2canvas) {
-
-      const script =
-        document.createElement("script");
-
-      script.src =
-        "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
-
-      document.head.appendChild(script);
-
-      await new Promise((resolve) => {
-        script.onload = resolve;
-      });
-
-    }
-
-
-    const card =
-      document.getElementById("shareCard");
-
-
-    const canvas =
-      await html2canvas(card, {
-        scale: 2,
-        backgroundColor: "#101010"
-      });
-
-
-    const link =
-      document.createElement("a");
-
-    link.download =
-      "gkt-roast-my-bio.png";
-
-    link.href =
-      canvas.toDataURL("image/png");
-
-    link.click();
-
-  });
+document.getElementById('downloadBtn').addEventListener('click',async()=>{
+  if(!window.html2canvas){const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';document.head.appendChild(s);await new Promise((res,rej)=>{s.onload=res;s.onerror=rej;});}
+  const canvas=await html2canvas(document.getElementById('shareCard'),{scale:2,backgroundColor:'#101010'});
+  const a=document.createElement('a');a.download='gkt-roast-my-bio.png';a.href=canvas.toDataURL('image/png');a.click();
+});
